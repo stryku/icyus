@@ -69,6 +69,7 @@ set (IcyusInternals_inc ${internals_inc_dir}/Internals.hpp
                         ${internals_inc_dir}/view/detail/QtWidgetManager.hpp
                         ${internals_inc_dir}/input/IInputHandler.hpp
                         ${internals_inc_dir}/model/Model.hpp
+                        ${internals_inc_dir}/model/IModelObserver.hpp
                         ${internals_inc_dir}/controller/Controller.hpp)
        
        
