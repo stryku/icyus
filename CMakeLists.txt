@@ -1,7 +1,6 @@
 cmake_minimum_required (VERSION 2.8.12)
 project (Icyus)
 
-set (program_name "Icyus")
 
 include(CheckCXXCompilerFlag)
 CHECK_CXX_COMPILER_FLAG("-std=c++14" COMPILER_SUPPORTS_CXX14)
@@ -39,6 +38,8 @@ set( CMAKE_PREFIX_PATH C:/Qt/Qt5.7.0/5.7/msvc2015/)
 find_package (Qt5Widgets)
 find_package (Qt5UiTools REQUIRED)
 
+#helpers
+set (program_name "Icyus")
 set (src_root ${CMAKE_CURRENT_SOURCE_DIR})
 set (src_dir ${src_root}/sources/src)
 set (inc_dir ${src_root}/sources/inc)
@@ -49,23 +50,29 @@ set (lib_dir ${src_root}/lib)
 set (install_dir ${src_root}/bin)
 set (resources_dir ${src_root}/resources)
 
+#install message
 message (${program_name} " will be installed in:")
 message (${install_dir})
 
 include_directories (${inc_dir}
-                     ${Qt5UiTools_INCLUDE_DIRS})
-
-set (IcyusInternals_src ${internals_dir}/view/QtView.cpp
-                        ${internals_dir}/view/View.cpp)
+                     ${Qt5UiTools_INCLUDE_DIRS}
+                     ${PROJECT_SOURCE_DIR}
+                     ${PROJECT_BINARY_DIR})
+                     
+#internals
+set (IcyusInternals_src ${internals_dir}/view/QtView.cpp)
                      
 set (IcyusInternals_inc ${internals_inc_dir}/view/QtView.hpp
-                        ${internals_inc_dir}/view/View.hpp
+                        ${internals_inc_dir}/view/IView.hpp
+                        ${internals_inc_dir}/view/detail/QtViewControls.hpp
                         ${internals_inc_dir}/view/detail/QtWidgetManager.hpp)
-                     
+       
+       
 set (Icyus_src  ${src_dir}/main.cpp
                 ${src_dir}/mainwindow.cpp)
                     
 set (Icyus_inc   ${inc_dir}/mainwindow.hpp)
+
 
 set (Icyus_hdr ${inc_dir}/mainwindow.hpp)
 set (Icyus_ui  ${ui_dir}/mainwindow.ui)
@@ -73,8 +80,6 @@ set (Icyus_ui  ${ui_dir}/mainwindow.ui)
 qt5_wrap_cpp(Icyus_hdr_moc ${Icyus_hdr})
 qt5_wrap_ui (Icyus_ui_moc  ${Icyus_ui})
 
-include_directories (${PROJECT_SOURCE_DIR})
-include_directories (${PROJECT_BINARY_DIR})
 
 add_executable(Icyus 
                 ${Icyus_src}
@@ -85,7 +90,6 @@ add_executable(Icyus
                 ${Icyus_ui_moc})
                
 target_link_libraries (Icyus Qt5::Widgets Qt5::UiTools ${ZMQ_LIBRARIES})
-
 
 install(TARGETS Icyus DESTINATION  ${install_dir}/)
 install(
