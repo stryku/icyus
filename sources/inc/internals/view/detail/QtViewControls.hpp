@@ -19,7 +19,7 @@ namespace Icyus
                     QLabel *labelFileToSend;
                     QLabel *labelConnectionStatus;
                     QProgressBar *progressBar;
-                } sender;
+                } senderTab;
 
                 struct
                 {
@@ -27,7 +27,7 @@ namespace Icyus
                     QLabel *labelIp;
                     QLabel *labelReceivingFile;
                     QProgressBar *progressBar;
-                } receiver;
+                } receiverTab;
             };
         }
     }
