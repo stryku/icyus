@@ -1,12 +1,12 @@
 #pragma once
 
-#include <View.hpp>
+#include <internals/view/IView.hpp>
 
 namespace Icyus
 {
     namespace View
     {
-        class QtView final
+        class QtView final : public IView
         {
         public:
             ~QtView() = default;
