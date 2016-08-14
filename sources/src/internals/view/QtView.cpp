@@ -1,2 +1,1 @@
-#include <program2internals/view/QtView.h>
-
+#include <internals/view/IView.hpp>
