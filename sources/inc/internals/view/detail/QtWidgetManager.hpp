@@ -1,6 +1,7 @@
 #pragma once
 
 #include <internals/view/detail/QtViewControls.hpp>
+#include <internals/input/InputCallbacks.hpp>
 
 #include <QWidget>
 #include <QLabel>
@@ -86,6 +87,13 @@ namespace Icyus
                     return formWidget;
                 }
 
+                void connectInputWithCallbacks(Icyus::Input::InputCallbacks &callbacks)
+                {
+                    formWidget->connect(controls.senderTab.buttonChooseFile,
+                                        &QPushButton::clicked,
+                                        callbacks.chooseFile);
+                }
+
             private:
                 QWidget* loadUiFile(const QString &path, QWidget *parent = nullptr) const //todo noexcept?
                 {
@@ -125,6 +133,7 @@ namespace Icyus
                     controls.labelFileToSend = widget->findChild<QLabel*>("labelFileToSend");
                     controls.progressBar = widget->findChild<QProgressBar*>("progressBarSender");
                     controls.lineEditReceiverIp = widget->findChild<QLineEdit*>("lineEditReceiverIp");
+                    controls.buttonChooseFile = widget->findChild<QPushButton*>("pushButtonChooseFileToSend");
 
                     return controls;
                 }

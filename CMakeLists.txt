@@ -61,16 +61,21 @@ include_directories (${inc_dir}
                      
 #internals
 set (IcyusInternals_src ${internals_dir}/view/QtView.cpp)
-                     
+ 
 set (IcyusInternals_inc ${internals_inc_dir}/Internals.hpp
                         ${internals_inc_dir}/view/QtView.hpp
                         ${internals_inc_dir}/view/IView.hpp
                         ${internals_inc_dir}/view/detail/QtViewControls.hpp
                         ${internals_inc_dir}/view/detail/QtWidgetManager.hpp
+                        ${internals_inc_dir}/input/InputCallbacks.hpp
+                        ${internals_inc_dir}/input/InputPropagator.hpp
+                        ${internals_inc_dir}/input/IInputObserver.hpp
                         ${internals_inc_dir}/input/IInputHandler.hpp
                         ${internals_inc_dir}/model/Model.hpp
                         ${internals_inc_dir}/model/IModelObserver.hpp
-                        ${internals_inc_dir}/controller/Controller.hpp)
+                        ${internals_inc_dir}/controller/Controller.hpp
+                        ${internals_inc_dir}/system/ISystemInteractor.hpp
+                        ${internals_inc_dir}/system/QtSystemInteractor.hpp)
        
        
 set (Icyus_src  ${src_dir}/main.cpp

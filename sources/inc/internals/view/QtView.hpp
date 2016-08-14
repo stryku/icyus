@@ -23,6 +23,11 @@ namespace Icyus
             QtView(QtView&) = delete;
             QtView& operator=(QtView&) = delete;
 
+            void connectWithInputPropagator(Icyus::Input::InputPropagator &propagator) override
+            {
+                widgetManager.connectInputWithCallbacks(propagator.getCallbacks());
+            }
+
             void setFileToSend(const std::string &path) override
             {
                 widgetManager.setFileToSendLabel(QString::fromStdString(path));

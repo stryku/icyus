@@ -16,5 +16,5 @@ MainWindow::~MainWindow()
 
 QWidget* MainWindow::getWidget()
 {
-    return ui->centralWidget;
+    return ui->widgetContainer;
 }

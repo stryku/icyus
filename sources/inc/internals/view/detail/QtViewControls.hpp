@@ -19,6 +19,7 @@ namespace Icyus
                     QLabel *labelFileToSend;
                     QLabel *labelConnectionStatus;
                     QProgressBar *progressBar;
+                    QPushButton *buttonChooseFile;
                 } senderTab;
 
                 struct ReceiverTabControls

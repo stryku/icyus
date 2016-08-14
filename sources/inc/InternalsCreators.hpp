@@ -2,6 +2,8 @@
 
 #include <internals/Internals.hpp>
 #include <internals/view/QtView.hpp>
+#include <internals/input/InputPropagator.hpp>
+#include <internals/system/QtSystemInteractor.hpp>
 
 #include <QWidget>
 
@@ -11,12 +13,13 @@ namespace Icyus
     {
         Icyus::Internals createLocalQt(QWidget *qtViewWidgetParent)
         {
+            auto systemInteractor = new Icyus::System::QtSystemInteractor();
             auto model = new Icyus::Model::Model();
-            auto controller = new Icyus::Controller::Controller(*model);
-            //auto inputPropagator = new Icyus::Input::InputPropagator();
+            auto controller = new Icyus::Controller::Controller(*model, *systemInteractor);
+            auto inputPropagator = new Icyus::Input::InputPropagator(*controller);
             auto view = new Icyus::View::QtView(qtViewWidgetParent);
 
-            //view->connectWithInput(inputPropagator);
+            view->connectWithInputPropagator(*inputPropagator);
             model->registerObserver(controller);
             controller->registerView(view);
 

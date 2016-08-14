@@ -1,5 +1,7 @@
 #pragma once
 
+#include <internals/input/InputPropagator.hpp>
+
 #include <stdint.h>
 #include <string>
 
@@ -11,6 +13,8 @@ namespace Icyus
         {
         public:
             virtual ~IView() = default;
+
+            virtual void connectWithInputPropagator(Icyus::Input::InputPropagator &propagator) = 0;
 
             virtual void setFileToSend(const std::string &path) = 0;
             virtual void setSenderProgressBounds(int min, int max) = 0;

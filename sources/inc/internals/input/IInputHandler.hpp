@@ -8,6 +8,8 @@ namespace Icyus
         {
         public:
             ~IInputHandler() = default;
+
+            virtual void chooseFile() = 0;
         };
     }
 }
