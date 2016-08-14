@@ -6,6 +6,7 @@ namespace Icyus
     {
         class IInputHandler abstract
         {
+        public:
             ~IInputHandler() = default;
         };
     }

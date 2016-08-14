@@ -76,7 +76,8 @@ set (IcyusInternals_inc ${internals_inc_dir}/Internals.hpp
 set (Icyus_src  ${src_dir}/main.cpp
                 ${src_dir}/mainwindow.cpp)
                     
-set (Icyus_inc   ${inc_dir}/mainwindow.hpp)
+set (Icyus_inc   ${inc_dir}/mainwindow.hpp
+                 ${inc_dir}/InternalsCreators.hpp)
 
 
 set (Icyus_hdr ${inc_dir}/mainwindow.hpp)

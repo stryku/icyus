@@ -12,3 +12,9 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
+
+
+QWidget* MainWindow::getWidget()
+{
+    return ui->centralWidget;
+}

@@ -8,6 +8,7 @@
 #include <QUiLoader>
 #include <QFile>
 #include <QProgressBar>
+#include <QLineEdit>
 
 #include <functional>
 
@@ -20,20 +21,20 @@ namespace Icyus
             class QtWidgetManager final
             {
             public:
-                explicit QtWidgetManager(QWidget *parent, const QString &uiFilePath = "uiforms/form.ui")
-                {
-
-                }
+                explicit QtWidgetManager(QWidget *parent, const QString &uiFilePath = "uiforms/form.ui") :
+                    formWidget{ createWidget(parent, uiFilePath) },
+                    controls { extractControls(formWidget) }
+                {}
 
                 QString getReceiverIp() const noexcept
                 {
                     return controls.receiverTab.labelIp->text();
                 }
 
-                void setFileToSendLabel(const std::string &path)
+                void setFileToSendLabel(const QString &path)
                 {
                     controls.senderTab.labelFileToSend->setText(QString("%1: %2").arg("File to send", 
-                                                                                      QString::fromStdString(path)));
+                                                                                      path));
                 }
 
                 void setSenderProgressBarBounds(int min, int max)
@@ -48,10 +49,10 @@ namespace Icyus
                     controls.senderTab.progressBar->setValue(value);
                 }
 
-                void setSenderConnectedStatus(const std::string &status)
+                void setSenderConnectedStatus(const QString &status)
                 {
                     controls.senderTab.labelConnectionStatus->setText(QString("%1: %2").arg("Connection status",
-                                                                                            QString::fromStdString(status)));
+                                                                                            status));
                 }
 
 
@@ -61,10 +62,10 @@ namespace Icyus
                                                                                              status ? "connected" : "not connected"));
                 }
 
-                void setReceivingFileName(const std::string &name)
+                void setReceivingFileName(const QString &name)
                 {
                     controls.receiverTab.labelReceivingFile->setText(QString("%1: %2").arg("Receiving file",
-                                                                                           QString::fromStdString(name)));
+                                                                                           name));
                 }
 
                 void setReceiverProgressBarBounds(int min, int max)
@@ -86,8 +87,59 @@ namespace Icyus
                 }
 
             private:
-                QWidget* loadUiFile( const QString &path, QWidget *parent = nullptr ) const;
-                QWidget* createWidget( QWidget *parent, const QString &uiFilePath );
+                QWidget* loadUiFile(const QString &path, QWidget *parent = nullptr) const //todo noexcept?
+                {
+                    QUiLoader loader;
+                    QFile file{ path };
+
+                    file.open(QFile::ReadOnly);
+
+                    auto widget = loader.load(&file, parent);
+                    file.close();
+
+                    return widget;
+                }
+
+                QWidget* createWidget(QWidget *parent, const QString &uiFilePath) const //todo noexcept?
+                {
+                    auto widget = loadUiFile(uiFilePath);
+
+                    widget->setParent(parent);
+
+                    return widget;
+                }
+
+                QtViewControls extractControls(QWidget *widget) const noexcept
+                {
+                    return {
+                        extractSenderTabControls(widget),
+                        extractReceiverTabControls(widget)
+                    };
+                }
+
+                QtViewControls::SenderTabControls extractSenderTabControls(QWidget *widget) const noexcept
+                {
+                    QtViewControls::SenderTabControls controls;
+
+                    controls.labelConnectionStatus = widget->findChild<QLabel*>("labelConnectionStatus");
+                    controls.labelFileToSend = widget->findChild<QLabel*>("labelFileToSend");
+                    controls.progressBar = widget->findChild<QProgressBar*>("progressBarSender");
+                    controls.lineEditReceiverIp = widget->findChild<QLineEdit*>("lineEditReceiverIp");
+
+                    return controls;
+                }
+
+                QtViewControls::ReceiverTabControls extractReceiverTabControls(QWidget *widget) const noexcept
+                {
+                    QtViewControls::ReceiverTabControls controls;
+
+                    controls.labelIp = widget->findChild<QLabel*>("labelReceiverIp");
+                    controls.labelListeningStatus = widget->findChild<QLabel*>("labelListeningStatus");
+                    controls.progressBar = widget->findChild<QProgressBar*>("progressBarReceiver");
+                    controls.labelReceivingFile = widget->findChild<QLabel*>("labelReceivinFile");
+
+                    return controls;
+                }
 
                 QWidget *formWidget;
                 QtViewControls controls;

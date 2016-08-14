@@ -2,7 +2,7 @@
 
 class QLabel;
 class QPushButton;
-class QEditText;
+class QLineEdit;
 class QProgressBar;
 
 namespace Icyus
@@ -13,15 +13,15 @@ namespace Icyus
         {
             struct QtViewControls
             {
-                struct
+                struct SenderTabControls
                 {
-                    QEditText *textEditReceiverIp;
+                    QLineEdit *lineEditReceiverIp;
                     QLabel *labelFileToSend;
                     QLabel *labelConnectionStatus;
                     QProgressBar *progressBar;
                 } senderTab;
 
-                struct
+                struct ReceiverTabControls
                 {
                     QLabel *labelListeningStatus;
                     QLabel *labelIp;
