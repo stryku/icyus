@@ -11,13 +11,13 @@ namespace Icyus
         public:
             ~QtView() = default;
 
-            void setFileToSendLabel(const std::string &path) override
+            void setFileToSend(const std::string &path) override
             {}
 
-            void setSenderProgressBarBounds(int min, int max) override
+            void setSenderProgressBounds(int min, int max) override
             {}
 
-            void setSenderProgressBarValue(int value) override
+            void setSenderProgressValue(int value) override
             {}
 
             void setSenderConnectedStatus(const std::string &status) override
@@ -30,10 +30,10 @@ namespace Icyus
             void setReceivingFileName(const std::string &name) override
             {}
 
-            void setReceiverProgressBarBounds(int min, int max) override
+            void setReceiverProgressBounds(int min, int max) override
             {}
 
-            void setReceiverProgressBarValue(int value) override
+            void setReceiverProgressValue(int value) override
             {}
         };
     }
