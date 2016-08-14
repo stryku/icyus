@@ -1,3 +1,7 @@
+#my own
+build/
+build/*
+
 # C++ objects and libs
 
 *.slo
