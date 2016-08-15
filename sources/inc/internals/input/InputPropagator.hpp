@@ -19,10 +19,28 @@ namespace Icyus
                 inputHandler.chooseFile();
             }
 
+            void send()
+            {
+                inputHandler.send();
+            }
+
+            void connect()
+            {
+                inputHandler.connect();
+            }
+
+            void newReceiverAddress(const std::string &address)
+            {
+                inputHandler.newReceiverAddress(address);
+            }
+
             InputCallbacks getCallbacks()
             {
-                return { 
-                    [this] (bool) { chooseFile(); } 
+                return {
+                    [this](bool) { chooseFile(); },
+                    [this](bool) { send(); },
+                    [this](bool) { connect(); },
+                    [this](const std::string &address) { newReceiverAddress(address); }
                 };
             }
 
