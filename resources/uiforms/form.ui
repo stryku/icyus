@@ -65,7 +65,7 @@
          <x>0</x>
          <y>90</y>
          <width>371</width>
-         <height>81</height>
+         <height>111</height>
         </rect>
        </property>
        <property name="orientation">
@@ -79,6 +79,11 @@
        <widget class="QPushButton" name="pushButtonChooseFileToSend">
         <property name="text">
          <string>Choose file</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="pushButtonSend">
+        <property name="text">
+         <string>Send</string>
         </property>
        </widget>
        <widget class="QProgressBar" name="progressBarSender">
