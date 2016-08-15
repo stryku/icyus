@@ -75,8 +75,9 @@ set (IcyusInternals_inc ${internals_inc_dir}/Internals.hpp
                         ${internals_inc_dir}/model/IModelObserver.hpp
                         ${internals_inc_dir}/controller/Controller.hpp
                         ${internals_inc_dir}/system/ISystemInteractor.hpp
-                        ${internals_inc_dir}/system/QtSystemInteractor.hpp 
+                        ${internals_inc_dir}/system/QtSystemInteractor.hpp
                         ${internals_inc_dir}/communication/FileSender.hpp
+                        ${internals_inc_dir}/communication/FileReceiver.hpp
                         ${internals_inc_dir}/utils/foreach.hpp)
        
        
