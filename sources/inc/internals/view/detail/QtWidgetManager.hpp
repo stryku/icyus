@@ -107,7 +107,7 @@ namespace Icyus
 
                     formWidget->connect(controls.senderTab.buttonConnect,
                                         &QPushButton::clicked,
-                                        callbacks.send);
+                                        callbacks.connect);
 
                     formWidget->connect(controls.senderTab.lineEditReceiverIp,
                                         &QLineEdit::editingFinished,

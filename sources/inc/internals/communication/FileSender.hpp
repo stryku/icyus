@@ -34,10 +34,18 @@ namespace Icyus
 
             void connect(const std::string &address, std::function<void()> doneCallback = {})
             {
-                socket.connect(address);
+                try
+                {
 
-                if (doneCallback)
-                    doneCallback();
+                    socket.connect(address);
+
+                    if (doneCallback)
+                        doneCallback();
+                }
+                catch (std::exception &e)
+                {
+                    //todo handle
+                }
             }
 
             void connectAsync(const std::string &address, std::function<void()> doneCallback)
