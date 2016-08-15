@@ -36,7 +36,6 @@ namespace Icyus
             {
                 try
                 {
-
                     socket.connect(address);
 
                     if (doneCallback)
@@ -50,6 +49,9 @@ namespace Icyus
 
             void connectAsync(const std::string &address, std::function<void()> doneCallback)
             {
+                if (asyncThread.joinable())
+                    asyncThread.join();
+
                 asyncThread = std::thread{ [this, 
                                             address, 
                                             doneCallback] {connect(address, 
@@ -77,6 +79,9 @@ namespace Icyus
 
             void sendAsync(const std::string &path)
             {
+                if (asyncThread.joinable())
+                    asyncThread.join();
+
                 asyncThread = std::thread{ [this, &path] { send(path); } };
             }
 
