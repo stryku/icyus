@@ -92,6 +92,21 @@ namespace Icyus
                     formWidget->connect(controls.senderTab.buttonChooseFile,
                                         &QPushButton::clicked,
                                         callbacks.chooseFile);
+
+                    formWidget->connect(controls.senderTab.buttonSend,
+                                        &QPushButton::clicked,
+                                        callbacks.send);
+
+                    formWidget->connect(controls.senderTab.buttonConnect,
+                                        &QPushButton::clicked,
+                                        callbacks.send);
+
+                    formWidget->connect(controls.senderTab.lineEditReceiverIp,
+                                        &QLineEdit::editingFinished,
+                                        [this, callbacks] 
+                                        { 
+                                            callbacks.newReceiverAddress(controls.senderTab.lineEditReceiverIp->text().toStdString()); 
+                                        });
                 }
 
             private:
@@ -134,6 +149,8 @@ namespace Icyus
                     controls.progressBar = widget->findChild<QProgressBar*>("progressBarSender");
                     controls.lineEditReceiverIp = widget->findChild<QLineEdit*>("lineEditReceiverIp");
                     controls.buttonChooseFile = widget->findChild<QPushButton*>("pushButtonChooseFileToSend");
+                    controls.buttonSend = widget->findChild<QPushButton*>("pushButtonSend");
+                    controls.buttonConnect = widget->findChild<QPushButton*>("pushButtonConnect");
 
                     return controls;
                 }
