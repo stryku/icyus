@@ -25,14 +25,50 @@ namespace Icyus
                     observer->senderFilePathChanged(senderFilePath);
             }
 
+            void newReceiverAddress(const std::string &address) override
+            {
+                receiverAddress = address;
+
+                for (auto observer : modelObservers)
+                    observer->newReceiverAddress(receiverAddress);
+            }
+
+            void newSenderProgress(size_t progress)
+            {
+                senderProgress = progress;
+
+                for (auto observer : modelObservers)
+                    observer->newSenderProgress(senderProgress);
+            }
+
+            void newSenderConnectionStatus(const std::string &status)
+            {
+                senderConnectionStatus = status;
+
+                for (auto observer : modelObservers)
+                    observer->newSenderConnectionStatus(senderConnectionStatus);
+            }
+
             void registerObserver(IModelObserver *observer)
             {
                 modelObservers.push_back(observer);
             }
 
-        private:
+            auto getSenderFilePath() const
+            {
+                return senderFilePath;
+            }
 
+            auto getReceiverAddress() const
+            {
+                return receiverAddress;
+            }
+
+        private:
+            size_t senderProgress;
             std::string senderFilePath;
+            std::string receiverAddress;
+            std::string senderConnectionStatus;
             std::vector<IModelObserver*> modelObservers;
         };
     }
