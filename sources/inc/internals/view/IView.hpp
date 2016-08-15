@@ -18,6 +18,7 @@ namespace Icyus
 
             virtual void sendingStarted(size_t size) = 0;
 
+            virtual void setReceiverAddress(const std::string &address) = 0;
             virtual void setFileToSend(const std::string &path) = 0;
             virtual void setSenderProgressBounds(int min, int max) = 0;
             virtual void setSenderProgressValue(int value) = 0;

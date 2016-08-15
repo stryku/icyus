@@ -28,6 +28,11 @@ namespace Icyus
                 //todo disable controls
             }
 
+            void setReceiverAddress(const std::string &address) override
+            {
+                widgetManager.setReceiverAddress(address);
+            }
+
             void connectWithInputPropagator(Icyus::Input::InputPropagator &propagator) override
             {
                 widgetManager.connectInputWithCallbacks(propagator.getCallbacks());

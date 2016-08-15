@@ -32,6 +32,14 @@ namespace Icyus
                     return controls.receiverTab.labelIp->text();
                 }
 
+                void setReceiverAddress(const std::string &address)
+                {
+                    auto str = QString::fromStdString(address);
+
+                    if (controls.senderTab.lineEditReceiverIp->text() != str)
+                        controls.senderTab.lineEditReceiverIp->setText(str);
+                }
+
                 void setFileToSendLabel(const QString &path)
                 {
                     controls.senderTab.labelFileToSend->setText(QString("%1: %2").arg("File to send", 

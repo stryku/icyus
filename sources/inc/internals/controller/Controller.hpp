@@ -44,6 +44,11 @@ namespace Icyus
                 myforeachptr(views, setSenderConnectedStatus, status);
             }
 
+            void newModelReceiverAddress(const std::string &address) override
+            {
+                myforeachptr(views, setReceiverAddress, address);
+            }
+
             void send() override
             {
                 auto path = model.getSenderFilePath();

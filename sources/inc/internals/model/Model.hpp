@@ -17,22 +17,20 @@ namespace Icyus
             Model(Model&&) = default;
             Model& operator=(Model&&) = default;
 
-            void newFileChoosed(const std::string &path, void *notifier) override
+            void newFileChoosed(const std::string &path) override
             {
                 senderFilePath = path;
 
                 for (auto observer : modelObservers)
-                    if (observer != notifier)
-                        observer->senderFilePathChanged(senderFilePath);
+                    observer->senderFilePathChanged(senderFilePath);
             }
 
-            void newReceiverAddress(const std::string &address, void *notifier) override
+            void newReceiverAddress(const std::string &address) override
             {
                 receiverAddress = address;
 
                 for (auto observer : modelObservers)
-                    if(observer != notifier)
-                        observer->newReceiverAddress(receiverAddress);
+                    observer->newModelReceiverAddress(receiverAddress);
             }
 
             void newSenderProgress(size_t progress)
