@@ -23,6 +23,11 @@ namespace Icyus
             QtView(QtView&) = delete;
             QtView& operator=(QtView&) = delete;
 
+            void sendingStarted(size_t size) override
+            {
+                //todo disable controls
+            }
+
             void connectWithInputPropagator(Icyus::Input::InputPropagator &propagator) override
             {
                 widgetManager.connectInputWithCallbacks(propagator.getCallbacks());
