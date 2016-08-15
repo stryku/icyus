@@ -12,6 +12,11 @@ namespace Icyus
             std::function<void(bool)> send;
             std::function<void(bool)> connect;
             std::function<void(const std::string&)> newReceiverAddress;
+
+            struct Receiver
+            {
+                std::function<void(bool)> startListening;
+            } receiver;
         };
     }
 }

@@ -30,6 +30,7 @@ namespace Icyus
                     QLabel *labelIp;
                     QLabel *labelReceivingFile;
                     QProgressBar *progressBar;
+                    QPushButton *buttonStartReceiving;
                 } receiverTab;
             };
         }

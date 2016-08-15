@@ -115,12 +115,17 @@
        </property>
        <widget class="QLabel" name="labelListeningStatus">
         <property name="text">
-         <string>Listening status: OK</string>
+         <string>Listening status: not listening</string>
         </property>
        </widget>
        <widget class="QLabel" name="labelReceiverIp">
         <property name="text">
          <string>IP: tcp://127.0.0.1:1666</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="pushButtonStartListening">
+        <property name="text">
+         <string>Start listening</string>
         </property>
        </widget>
        <widget class="QLabel" name="labelReceivinFile">

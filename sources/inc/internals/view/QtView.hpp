@@ -59,7 +59,7 @@ namespace Icyus
             }
 
 
-            void setReceiverListeningStatus(bool status) override
+            void setReceiverListeningStatus(const std::string &status) override
             {
                 widgetManager.setReceiverListeningStatus(status);
             }

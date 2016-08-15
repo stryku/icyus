@@ -15,6 +15,8 @@ namespace Icyus
             virtual void send() = 0;
             virtual void connect() = 0;
             virtual void newReceiverAddress(const std::string &address) = 0;
+
+            virtual void receiverStartListening() = 0;
         };
     }
 }

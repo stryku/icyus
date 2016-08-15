@@ -5,6 +5,7 @@
 #include <internals/input/InputPropagator.hpp>
 #include <internals/system/QtSystemInteractor.hpp>
 #include <internals/communication/FileSender.hpp>
+#include <internals/communication/FileReceiver.hpp>
 
 #include <QWidget>
 
@@ -16,9 +17,10 @@ namespace Icyus
         {
             auto ctx = new zmq::context_t{ 1 };
             auto sender = new Icyus::Communication::FileSender{ *ctx };
+            auto receiver = new Icyus::Communication::FileReceiver{ *ctx };
             auto systemInteractor = new Icyus::System::QtSystemInteractor();
             auto model = new Icyus::Model::Model();
-            auto controller = new Icyus::Controller::Controller(*model, *model, *systemInteractor, *sender);
+            auto controller = new Icyus::Controller::Controller(*model, *model, *systemInteractor, *sender, *receiver);
             auto inputPropagator = new Icyus::Input::InputPropagator(*controller);
             auto view = new Icyus::View::QtView(qtViewWidgetParent);
 

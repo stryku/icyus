@@ -5,6 +5,7 @@
 #include <functional>
 #include <fstream>
 #include <thread>
+#include <filesystem>
 
 namespace Icyus
 {
@@ -63,17 +64,28 @@ namespace Icyus
                 std::vector<char> buffer(granularity);
                 char *buffPtr = &buffer[0];
                 std::ifstream file{ path, std::ios::binary };
-                size_t alreadySendBytes{ 0 };
-                size_t currentRead;
+                auto alreadySendBytes{ 0ull };
+                auto currentRead{ 0ull };
 
                 if (!file.is_open())
                     return;
+
+                auto fileSize = std::experimental::filesystem::file_size(path);
+                auto strSize = std::to_string(fileSize);
+
+                socket.send(strSize.begin(), strSize.end());
                 
-                while ((currentRead = file.readsome(buffPtr, granularity) != 0))
+                while (file.read(buffPtr, granularity))
                 {
+                    currentRead = file.gcount();
                     socket.send(buffPtr, currentRead);
                     alreadySendBytes += currentRead;
-                    progressCallback(alreadySendBytes);
+                    //progressCallback((alreadySendBytes * 100) / fileSize);
+                }
+
+                if ((currentRead = file.gcount()) > 0)
+                {
+                    socket.send(buffPtr, currentRead);
                 }
             }
 
@@ -82,7 +94,7 @@ namespace Icyus
                 if (asyncThread.joinable())
                     asyncThread.join();
 
-                asyncThread = std::thread{ [this, &path] { send(path); } };
+                asyncThread = std::thread{ [this, path] { send(path); } };
             }
 
         private:

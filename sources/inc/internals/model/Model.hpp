@@ -41,12 +41,29 @@ namespace Icyus
                     observer->newSenderProgress(senderProgress);
             }
 
+            void newReceiverProgress(size_t progress)
+            {
+                receiverProgress = progress;
+
+                for (auto observer : modelObservers)
+                    observer->newReceiverProgress(receiverProgress);
+            }
+
             void newSenderConnectionStatus(const std::string &status)
             {
                 senderConnectionStatus = status;
 
                 for (auto observer : modelObservers)
                     observer->newSenderConnectionStatus(senderConnectionStatus);
+            }
+
+
+            void newReceiverListeningStatus(const std::string &status)
+            {
+                receiverListeningStatus = status;
+
+                for (auto observer : modelObservers)
+                    observer->newReceiverListeningStatus(senderConnectionStatus);
             }
 
             void registerObserver(IModelObserver *observer)
@@ -65,10 +82,12 @@ namespace Icyus
             }
 
         private:
+            size_t receiverProgress;
             size_t senderProgress;
             std::string senderFilePath;
             std::string receiverAddress;
             std::string senderConnectionStatus;
+            std::string receiverListeningStatus;
             std::vector<IModelObserver*> modelObservers;
         };
     }

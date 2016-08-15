@@ -29,6 +29,11 @@ namespace Icyus
                 inputHandler.connect();
             }
 
+            void startListening()
+            {
+                inputHandler.receiverStartListening();
+            }
+
             void newReceiverAddress(const std::string &address)
             {
                 inputHandler.newReceiverAddress(address);
@@ -40,7 +45,11 @@ namespace Icyus
                     [this](bool) { chooseFile(); },
                     [this](bool) { send(); },
                     [this](bool) { connect(); },
-                    [this](const std::string &address) { newReceiverAddress(address); }
+                    [this](const std::string &address) { newReceiverAddress(address); },
+
+                    {
+                        [this](bool) { startListening(); }
+                    }
                 };
             }
 

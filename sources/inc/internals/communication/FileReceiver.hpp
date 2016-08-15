@@ -14,26 +14,24 @@ namespace Icyus
         {
         public:
             FileReceiver(zmq::context_t &ctx,
-                         const std::string &address = "tcp://127.0.0.1:1666",
                          std::function<void(size_t)> callaback = {}) :
                 context{ ctx },
                 socket{ context, zmq::socket_type::pull },
                 progressCallback{ callaback }
             {
-                socket.bind(address);
             }
 
             void receiveFile()
             {
-                size_t fileSize;
-                size_t alreadyReceivedBytes{ 0 };
-                size_t currentlyReceived;
+                auto fileSize{ 0ull };
+                auto alreadyReceivedBytes{ 0ull };
+                auto currentlyReceived{ 0ull };
                 zmq::message_t msg;
-                std::ofstream out("out", std::ios::binary);
+                std::ofstream out("out2", std::ios::binary);
 
                 socket.recv(&msg);
 
-                fileSize = std::stoul(msg.str());
+                fileSize = std::stoull(msg.str());
 
                 while (alreadyReceivedBytes < fileSize)
                 {
@@ -43,17 +41,20 @@ namespace Icyus
 
                     alreadyReceivedBytes += currentlyReceived;
 
-                    if (progressCallback)
-                        progressCallback(alreadyReceivedBytes);
+                    //if (progressCallback)
+                        //progressCallback(alreadyReceivedBytes);
 
                     out.write(static_cast<const char*>(msg.data()), msg.size());
                 }
             }
 
-            void startReceiving()
+
+            void startListening(const std::string &address = "tcp://127.0.0.1:1666")
             {
                 if (receivingThread.joinable())
                     receivingThread.join();
+
+                socket.bind(address);
 
                 receivingThread = std::thread{ [this] {receiveFile(); } };
             }

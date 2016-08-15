@@ -7,6 +7,7 @@
 #include <internals/system/ISystemInteractor.hpp>
 #include <internals/model/Model.hpp>
 #include <internals/communication/FileSender.hpp>
+#include <internals/communication/FileReceiver.hpp>
 #include <internals/utils/foreach.hpp>
 
 #include <vector>
@@ -23,11 +24,13 @@ namespace Icyus
             Controller(Icyus::Model::Model &model,
                        Icyus::Input::IInputObserver &inputObserver,
                        Icyus::System::ISystemInteractor &systemInteractor,
-                       Icyus::Communication::FileSender &sender) :
+                       Icyus::Communication::FileSender &sender,
+                       Icyus::Communication::FileReceiver &receiver) :
                 model{ model },
                 inputObserver{ inputObserver },
                 systemInteractor{ systemInteractor },
-                sender{ sender }
+                sender{ sender },
+                receiver{ receiver }
             {}
             ~Controller() = default;
 
@@ -39,9 +42,20 @@ namespace Icyus
                     inputObserver.newFileChoosed(path);
             }
 
+            void receiverStartListening() override
+            {
+                model.newReceiverListeningStatus("listening");
+                receiver.startListening();
+            }
+
             void newSenderConnectionStatus(const std::string &status) override
             {
                 myforeachptr(views, setSenderConnectedStatus, status);
+            }
+
+            void newReceiverListeningStatus(const std::string &status) override
+            {
+                myforeachptr(views, setReceiverListeningStatus, status);
             }
 
             void newModelReceiverAddress(const std::string &address) override
@@ -63,7 +77,7 @@ namespace Icyus
                     model.newSenderProgress(progress);
                 });
 
-                sender.setGranularity(128); //todo
+                //sender.setGranularity(1024); //todo
                 sender.sendAsync(path);
             }
 
@@ -82,26 +96,27 @@ namespace Icyus
 
             void newSenderProgress(size_t progress) override
             {
-                for (auto view : views)
-                    view->setSenderProgressValue(progress);
+                myforeachptr(views, setSenderProgressValue, progress);
+            }
+
+            void newReceiverProgress(size_t progress) override
+            {
+                myforeachptr(views, setReceiverProgressValue, progress);
             }
 
             void senderFilePathChanged(const std::string &newPath) override
             {
-                for (auto view : views)
-                    view->setFileToSend(newPath);
+                myforeachptr(views, setFileToSend, newPath);
             }
 
             void senderProgressValueChanged(int newValue) override
             {
-                for (auto view : views)
-                    view->setSenderProgressValue(newValue);
+                myforeachptr(views, setSenderProgressValue, newValue);
             }
 
             void receiverProgressValueChanged(int newValue) override
             {
-                for (auto view : views)
-                    view->setReceiverProgressValue(newValue);
+                myforeachptr(views, setReceiverProgressValue, newValue);
             }
 
             void registerView(Icyus::View::IView *view)
@@ -115,6 +130,7 @@ namespace Icyus
             Icyus::System::ISystemInteractor &systemInteractor;
             std::vector<Icyus::View::IView*> views;
             Icyus::Communication::FileSender &sender;
+            Icyus::Communication::FileReceiver &receiver;
         };
     }
 }

@@ -65,10 +65,10 @@ namespace Icyus
                 }
 
 
-                void setReceiverListeningStatus(bool status)
+                void setReceiverListeningStatus(const std::string &status)
                 {
                     controls.receiverTab.labelListeningStatus->setText(QString("%1: %2").arg("Listening status",
-                                                                                             status ? "connected" : "not connected"));
+                                                                                             QString::fromStdString(status)));
                 }
 
                 void setReceivingFileName(const QString &name)
@@ -115,6 +115,12 @@ namespace Icyus
                                         { 
                                             callbacks.newReceiverAddress(controls.senderTab.lineEditReceiverIp->text().toStdString()); 
                                         });
+
+
+
+                    formWidget->connect(controls.receiverTab.buttonStartReceiving,
+                                        &QPushButton::clicked,
+                                        callbacks.receiver.startListening);
                 }
 
             private:
@@ -162,7 +168,7 @@ namespace Icyus
 
                     return controls;
                 }
-
+                
                 QtViewControls::ReceiverTabControls extractReceiverTabControls(QWidget *widget) const noexcept
                 {
                     QtViewControls::ReceiverTabControls controls;
@@ -171,6 +177,7 @@ namespace Icyus
                     controls.labelListeningStatus = widget->findChild<QLabel*>("labelListeningStatus");
                     controls.progressBar = widget->findChild<QProgressBar*>("progressBarReceiver");
                     controls.labelReceivingFile = widget->findChild<QLabel*>("labelReceivinFile");
+                    controls.buttonStartReceiving = widget->findChild<QPushButton*>("pushButtonStartListening");
 
                     return controls;
                 }
