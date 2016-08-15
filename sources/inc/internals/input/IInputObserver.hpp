@@ -11,8 +11,8 @@ namespace Icyus
         public:
             ~IInputObserver() = default;
 
-            virtual void newFileChoosed(const std::string &path) = 0;
-            virtual void newReceiverAddress(const std::string &address) = 0;
+            virtual void newFileChoosed(const std::string &path, void *notifier) = 0;
+            virtual void newReceiverAddress(const std::string &address, void *notifier) = 0;
         };
     }
 }
