@@ -1,5 +1,7 @@
 #pragma once
 
+#include <internals/utils/log.hpp>
+
 #include <zmq/zmq.hpp>
 
 #include <functional>
@@ -18,8 +20,7 @@ namespace Icyus
                 context{ ctx },
                 socket{ context, zmq::socket_type::pull },
                 progressCallback{ callaback }
-            {
-            }
+            {}
 
             void receiveFile()
             {
@@ -27,11 +28,16 @@ namespace Icyus
                 auto alreadyReceivedBytes{ 0ull };
                 auto currentlyReceived{ 0ull };
                 zmq::message_t msg;
-                std::ofstream out("out2", std::ios::binary);
+                auto fileName{ "out" };
+                std::ofstream out(fileName, std::ios::binary);
+
+                LOG("receiveFile. File will be written to " << fileName);
 
                 socket.recv(&msg);
 
                 fileSize = std::stoull(msg.str());
+
+                LOG("received file size: " << fileSize);
 
                 while (alreadyReceivedBytes < fileSize)
                 {
@@ -40,12 +46,17 @@ namespace Icyus
                     currentlyReceived = msg.size();
 
                     alreadyReceivedBytes += currentlyReceived;
+                    LOG("received file chunk of size: "<< currentlyReceived);
 
                     if (progressCallback)
                         progressCallback(alreadyReceivedBytes);
 
+                    LOG("received file chunk. Received " << alreadyReceivedBytes << "/" << fileSize << "b ("<<100* alreadyReceivedBytes / fileSize<<"%)");
+
                     out.write(static_cast<const char*>(msg.data()), msg.size());
                 }
+
+                LOG("receiving finished. Received " << alreadyReceivedBytes << "/" << fileSize << "bytes");
             }
 
 
@@ -56,7 +67,7 @@ namespace Icyus
 
                 socket.bind(address);
 
-                receivingThread = std::thread{ [this] {receiveFile(); } };
+                receivingThread = std::thread{ [this] { while(true) receiveFile(); } };
             }
 
         private:
