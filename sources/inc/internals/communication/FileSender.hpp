@@ -80,13 +80,13 @@ namespace Icyus
                     currentRead = file.gcount();
                     socket.send(buffPtr, currentRead);
                     alreadySendBytes += currentRead;
-                    //progressCallback((alreadySendBytes * 100) / fileSize);
+                    progressCallback((alreadySendBytes * 100) / fileSize);
                 }
 
                 if ((currentRead = file.gcount()) > 0)
-                {
                     socket.send(buffPtr, currentRead);
-                }
+
+                progressCallback(100);
             }
 
             void sendAsync(const std::string &path)

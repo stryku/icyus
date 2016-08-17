@@ -1,7 +1,6 @@
 cmake_minimum_required (VERSION 2.8.12)
 project (Icyus)
 
-
 include(CheckCXXCompilerFlag)
 CHECK_CXX_COMPILER_FLAG("-std=c++14" COMPILER_SUPPORTS_CXX14)
 CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
@@ -78,7 +77,8 @@ set (IcyusInternals_inc ${internals_inc_dir}/Internals.hpp
                         ${internals_inc_dir}/system/QtSystemInteractor.hpp
                         ${internals_inc_dir}/communication/FileSender.hpp
                         ${internals_inc_dir}/communication/FileReceiver.hpp
-                        ${internals_inc_dir}/utils/foreach.hpp)
+                        ${internals_inc_dir}/utils/foreach.hpp
+                        ${internals_inc_dir}/utils/log.hpp)
        
        
 set (Icyus_src  ${src_dir}/main.cpp

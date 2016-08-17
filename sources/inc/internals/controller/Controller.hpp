@@ -1,5 +1,6 @@
 #pragma once
 
+#include <internals/utils/log.hpp>
 #include <internals/input/IInputHandler.hpp>
 #include <internals/input/IInputObserver.hpp>
 #include <internals/model/IModelObserver.hpp>
@@ -50,16 +51,19 @@ namespace Icyus
 
             void newSenderConnectionStatus(const std::string &status) override
             {
+                LOG("New sender connection status: " << status);
                 myforeachptr(views, setSenderConnectedStatus, status);
             }
 
             void newReceiverListeningStatus(const std::string &status) override
             {
+                LOG("New receiver listening status: " << status);
                 myforeachptr(views, setReceiverListeningStatus, status);
             }
 
             void newModelReceiverAddress(const std::string &address) override
             {
+                LOG("New model receiver address: " << address);
                 myforeachptr(views, setReceiverAddress, address);
             }
 
@@ -69,6 +73,7 @@ namespace Icyus
 
                 auto fileSize = std::experimental::filesystem::file_size(path);
 
+                LOG("Sending started. \nFile: " << path << " \nsize: "<< fileSize);
                 for (auto view : views)
                     view->sendingStarted(fileSize);
 
@@ -77,8 +82,9 @@ namespace Icyus
                     model.newSenderProgress(progress);
                 });
 
-                //sender.setGranularity(1024); //todo
+                myforeachptr(views, setSenderProgressValue, 35); 
                 sender.sendAsync(path);
+                myforeachptr(views, setSenderProgressValue, 100);
             }
 
             void newReceiverAddress(const std::string &address) override
@@ -96,12 +102,14 @@ namespace Icyus
 
             void newSenderProgress(size_t progress) override
             {
-                myforeachptr(views, setSenderProgressValue, progress);
+                //myforeachptr(views, setSenderProgressValue, progress); // todo update views progress when multithread gui update will be implemented
+                LOG("sender progress: " << progress << "%");
             }
 
             void newReceiverProgress(size_t progress) override
             {
-                myforeachptr(views, setReceiverProgressValue, progress);
+                //myforeachptr(views, setReceiverProgressValue, progress);// todo update views progress when multithread gui update will be implemented
+                LOG("receiver progress: " << progress << "%");
             }
 
             void senderFilePathChanged(const std::string &newPath) override

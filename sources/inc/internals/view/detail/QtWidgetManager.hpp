@@ -116,8 +116,6 @@ namespace Icyus
                                             callbacks.newReceiverAddress(controls.senderTab.lineEditReceiverIp->text().toStdString()); 
                                         });
 
-
-
                     formWidget->connect(controls.receiverTab.buttonStartReceiving,
                                         &QPushButton::clicked,
                                         callbacks.receiver.startListening);

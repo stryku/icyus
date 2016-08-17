@@ -41,15 +41,15 @@ namespace Icyus
 
                     alreadyReceivedBytes += currentlyReceived;
 
-                    //if (progressCallback)
-                        //progressCallback(alreadyReceivedBytes);
+                    if (progressCallback)
+                        progressCallback(alreadyReceivedBytes);
 
                     out.write(static_cast<const char*>(msg.data()), msg.size());
                 }
             }
 
 
-            void startListening(const std::string &address = "tcp://127.0.0.1:1666")
+            void startListening(const std::string &address = "tcp://*:1666")
             {
                 if (receivingThread.joinable())
                     receivingThread.join();
