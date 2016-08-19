@@ -3,6 +3,8 @@
 #include <internals/model/IModelObserver.hpp>
 #include <internals/input/IInputObserver.hpp>
 
+#include <vector>
+
 namespace Icyus
 {
     namespace Model
@@ -12,74 +14,23 @@ namespace Icyus
         public:
             Model() = default;
             ~Model() = default;
-            Model(Model&) = default;
-            Model& operator=(Model&) = default;
             Model(Model&&) = default;
             Model& operator=(Model&&) = default;
 
-            void newFileChoosed(const std::string &path) override
-            {
-                senderFilePath = path;
+            Model(Model&) = delete;
+            Model& operator=(Model&) = delete;
 
-                for (auto observer : modelObservers)
-                    observer->senderFilePathChanged(senderFilePath);
-            }
+            void newFileChoosed(const std::string &path) override;
+            void newReceiverAddress(const std::string &address) override;
+            void newSenderProgress(size_t progress);
+            void newReceiverProgress(size_t progress);
+            void newSenderConnectionStatus(const std::string &status);
+            void newReceiverListeningStatus(const std::string &status);
 
-            void newReceiverAddress(const std::string &address) override
-            {
-                receiverAddress = address;
+            void registerObserver(IModelObserver *observer);
 
-                for (auto observer : modelObservers)
-                    observer->newModelReceiverAddress(receiverAddress);
-            }
-
-            void newSenderProgress(size_t progress)
-            {
-                senderProgress = progress;
-
-                for (auto observer : modelObservers)
-                    observer->newSenderProgress(senderProgress);
-            }
-
-            void newReceiverProgress(size_t progress)
-            {
-                receiverProgress = progress;
-
-                for (auto observer : modelObservers)
-                    observer->newReceiverProgress(receiverProgress);
-            }
-
-            void newSenderConnectionStatus(const std::string &status)
-            {
-                senderConnectionStatus = status;
-
-                for (auto observer : modelObservers)
-                    observer->newSenderConnectionStatus(senderConnectionStatus);
-            }
-
-
-            void newReceiverListeningStatus(const std::string &status)
-            {
-                receiverListeningStatus = status;
-
-                for (auto observer : modelObservers)
-                    observer->newReceiverListeningStatus(senderConnectionStatus);
-            }
-
-            void registerObserver(IModelObserver *observer)
-            {
-                modelObservers.push_back(observer);
-            }
-
-            auto getSenderFilePath() const
-            {
-                return senderFilePath;
-            }
-
-            auto getReceiverAddress() const
-            {
-                return receiverAddress;
-            }
+            std::string getSenderFilePath() const;
+            std::string getReceiverAddress() const;
 
         private:
             size_t receiverProgress;
