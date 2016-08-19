@@ -67,7 +67,7 @@ namespace Icyus
 
                 socket.bind(address);
 
-                receivingThread = std::thread{ [this] { while(true) receiveFile(); } };
+                receivingThread = std::thread{ [this] { receiveFile(); } };
             }
 
         private:
