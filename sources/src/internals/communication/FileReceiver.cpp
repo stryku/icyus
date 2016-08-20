@@ -20,12 +20,12 @@ namespace Icyus
             auto alreadyReceivedBytes{ 0ull };
             auto currentlyReceived{ 0ull };
             zmq::message_t msg;
-            auto fileName{ "out" };
-            std::ofstream out(fileName, std::ios::binary);
-            LOG("receiveFile. File will be written to " << fileName);
 
             auto header = receiveHeader();
             LOG("received file header: " << header.fileName << ", " << header.fileSize);
+
+            std::ofstream out(header.fileName, std::ios::binary);
+            LOG("File will be written to " << header.fileName);
 
             while (alreadyReceivedBytes < header.fileSize)
             {
