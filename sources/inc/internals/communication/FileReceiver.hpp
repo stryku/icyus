@@ -1,5 +1,6 @@
 #pragma once
 
+#include <internals/communication/details/TransferHeader.hpp>
 #include <internals/utils/log.hpp>
 
 #include <zmq/zmq.hpp>
@@ -23,6 +24,9 @@ namespace Icyus
             void startListening(const std::string &address = "tcp://*:1666");
 
         private:
+            detail::TransferHeader::Header receiveHeader();
+
+
             zmq::context_t &context;
             zmq::socket_t socket;
             std::function<void(size_t)> progressCallback;

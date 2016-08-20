@@ -20,17 +20,15 @@ namespace Icyus
                 class Parser
                 {
                 public:
-                    template <typename It, typename = std::enable_if_t<isXmlFormat<Format>>
-                        TransferHeader parse(It begin, It end)
+                    template <typename It, typename = std::enable_if_t<isXmlFormat<Format>>>
+                    static Header parse(It begin, It end)
                     {
-                        std::istringstream iss(begin, end);
+                        std::istringstream iss({ begin, end });
                         boost::property_tree::ptree tree;
                         boost::property_tree::xml_parser::read_xml(iss, tree);
 
-                        return {
-                            tree.get<TransferHeader::FileNameType>("header.filename"),
-                            tree.get<TransferHeader::FileSizeType>("header.filesize")
-                        }
+                        return Header(tree.get<Header::FileNameType>("header.filename"),
+                                      tree.get<Header::FileSizeType>("header.filesize"));
                     }
                 };
             }
