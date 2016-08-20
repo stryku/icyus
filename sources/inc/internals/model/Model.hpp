@@ -23,6 +23,7 @@ namespace Icyus
             void newFileChoosed(const std::string &path) override;
             void newReceiverAddress(const std::string &address) override;
             void newSenderProgress(size_t progress);
+            void newSenderTransferSpeed(uintmax_t progress);
             void newReceiverProgress(size_t progress);
             void newSenderConnectionStatus(const std::string &status);
             void newReceiverListeningStatus(const std::string &status);

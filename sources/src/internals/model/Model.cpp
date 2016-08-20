@@ -28,6 +28,16 @@ namespace Icyus
                 observer->newSenderProgress(senderProgress);
         }
 
+        void Model::newSenderTransferSpeed(uintmax_t progress)
+        {
+            senderProgress = progress;
+
+            for (auto observer : modelObservers)
+                observer->newSenderTransferSpeed(senderProgress);
+        }
+
+
+
         void Model::newReceiverProgress(size_t progress)
         {
             receiverProgress = progress;

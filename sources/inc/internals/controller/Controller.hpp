@@ -43,6 +43,7 @@ namespace Icyus
 
             void newSenderConnectionStatus(const std::string &status) override;
             void newSenderProgress(size_t progress) override;
+            void newSenderTransferSpeed(uintmax_t progress) override;
             void senderFilePathChanged(const std::string &newPath) override;
             void senderProgressValueChanged(int newValue) override;
 
