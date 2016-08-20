@@ -84,8 +84,10 @@ set (IcyusInternals_inc ${internals_inc_dir}/Internals.hpp
                         ${internals_inc_dir}/system/QtSystemInteractor.hpp
                         ${internals_inc_dir}/communication/FileSender.hpp
                         ${internals_inc_dir}/communication/FileReceiver.hpp
-                        ${internals_inc_dir}/communication/details/TransferHeaderXmlParser.hpp
+                        ${internals_inc_dir}/communication/details/TransferHeaderParser.hpp
                         ${internals_inc_dir}/communication/details/TransferHeader.hpp
+                        ${internals_inc_dir}/communication/details/TransferHeaderMsgFactory.hpp
+                        ${internals_inc_dir}/communication/details/FormatTraits.hpp
                         ${internals_inc_dir}/utils/foreach.hpp
                         ${internals_inc_dir}/utils/log.hpp)
        

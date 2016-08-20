@@ -1,6 +1,7 @@
 #pragma once
 
 #include <internals/communication/details/TransferHeader.hpp>
+#include <internals/communication/details/FormatTraits.hpp>
 
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/xml_parser.hpp>
@@ -14,37 +15,38 @@ namespace Icyus
     {
         namespace detail
         {
-            struct XmlType {};
-
-            template <typename Msg, typename TransferHeaderFormat>
-            class TransferHeaderMsgFactory
+            namespace TransferHeader
             {
-            public:
-                template <typename = std::enable_if_t<std::is_same<TransferHeaderFormat, XmlType>::value>>
-                static Msg create(TransferHeaderFormat type, const TransferHeader &header)
+                template <typename Msg, typename Format>
+                class MsgFactory
                 {
-                    std::ostringstream oss;
+                public:
+                    template <typename = std::enable_if_t<isXmlFormat<Format>>
+                    static Msg create(const Header &header)
+                    {
+                        std::ostringstream oss;
 
-                    auto tree = createTree(header);
+                        auto tree = createTree(header);
 
-                    boost::property_tree::write_xml(oss, tree);
+                        boost::property_tree::write_xml(oss, tree);
 
-                    const auto str = oss.str();
+                        const auto str = oss.str();
 
-                    return { str.cbegin(), str.cend() };
-                }
+                        return{ str.cbegin(), str.cend() };
+                    }
 
-            private:
-                auto createTree(const TransferHeader &header) const
-                {
-                    boost::property_tree::ptree tree;
+                private:
+                    auto createTree(const Header &header) const
+                    {
+                        boost::property_tree::ptree tree;
 
-                    tree.put("header.filename", header.fileName);
-                    tree.put("header.filesize", header.fileSize);
+                        tree.put("header.filename", header.fileName);
+                        tree.put("header.filesize", header.fileSize);
 
-                    return tree;
-                }
-            };
+                        return tree;
+                    }
+                };
+            }
         }
     }
 }
