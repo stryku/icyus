@@ -6,16 +6,25 @@ namespace Icyus
 {
     namespace Communication
     {
-        namespace TransferHeader
+        namespace detail
         {
-            struct Header
+            namespace TransferHeader
             {
-                using FileNameType = std::string;
-                using FileSizeType = uintmax_t;
+                struct Header
+                {
+                    using FileNameType = std::string;
+                    using FileSizeType = uintmax_t;
 
-                FileNameType fileName;
-                FileSizeType fileSize;
-            };
+                    Header() = default;
+                    Header(const FileNameType &fileName, const FileSizeType fileSize) :
+                        fileName{ fileName },
+                        fileSize{ fileSize }
+                    {}
+
+                    FileNameType fileName;
+                    FileSizeType fileSize;
+                };
+            }
         }
     }
 }

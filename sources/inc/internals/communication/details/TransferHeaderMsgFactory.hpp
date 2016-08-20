@@ -21,7 +21,7 @@ namespace Icyus
                 class MsgFactory
                 {
                 public:
-                    template <typename = std::enable_if_t<isXmlFormat<Format>>
+                    template <typename = std::enable_if_t<isXmlFormat<Format>>>
                     static Msg create(const Header &header)
                     {
                         std::ostringstream oss;
@@ -35,8 +35,13 @@ namespace Icyus
                         return{ str.cbegin(), str.cend() };
                     }
 
+                    static Msg create(const Header::FileNameType &fileName, const Header::FileSizeType fileSize)
+                    {
+                        return create(Header(fileName, fileSize));
+                    }
+
                 private:
-                    auto createTree(const Header &header) const
+                    static auto createTree(const Header &header)
                     {
                         boost::property_tree::ptree tree;
 
