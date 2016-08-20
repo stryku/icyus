@@ -15,11 +15,12 @@ namespace Icyus
         {
         public:
             FileSender(zmq::context_t &ctx,
-                       size_t granularity = 1024 * 1024 * 32,
+                       uintmax_t granularity = 1024 * 1024 * 10,
                        std::function<void(size_t)> callaback = {});
 
-            void setGranularity(size_t newGranularity);
-            void setUptadeProgressCallback(std::function<void(size_t)> newCallaback);
+            void setMemoryLimit(uintmax_t newMemoryLimit) noexcept;
+            void setGranularity(uintmax_t newGranularity) noexcept;
+            void setUptadeProgressCallback(std::function<void(size_t)> newCallaback) noexcept;
 
             void connect(const std::string &address, std::function<void()> doneCallback = {});
             void connectAsync(const std::string &address, std::function<void()> doneCallback);
@@ -31,7 +32,7 @@ namespace Icyus
             zmq::context_t &context;
             zmq::socket_t socket;
             std::function<void(size_t)> progressCallback;
-            size_t granularity;
+            uintmax_t granularity;
             std::thread asyncThread;
         };
     }

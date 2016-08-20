@@ -1,24 +1,31 @@
 #include <internals/communication/FileSender.hpp>
+#include <internals/utils/log.hpp>
+#include <internals/communication/utils/helpers.hpp>
 
 namespace Icyus
 {
     namespace Communication
     {
         FileSender::FileSender(zmq::context_t &ctx,
-                               size_t granularity,
+                               uintmax_t granularity,
                                std::function<void(size_t)> callaback) :
             context{ ctx },
-            socket{ context, zmq::socket_type::push },
+            socket{ context, zmq::socket_type::req },
             progressCallback{ callaback },
             granularity{ granularity }
         {}
 
-        void FileSender::setGranularity(size_t newGranularity)
+        void FileSender::setGranularity(uintmax_t newGranularity) noexcept
         {
             granularity = newGranularity;
         }
 
-        void FileSender::setUptadeProgressCallback(std::function<void(size_t)> newCallaback)
+        void FileSender::setMemoryLimit(uintmax_t newMemoryLimit) noexcept
+        {
+            memoryLimit = newMemoryLimit;
+        }
+
+        void FileSender::setUptadeProgressCallback(std::function<void(size_t)> newCallaback) noexcept
         {
             progressCallback = newCallaback;
         }
@@ -47,7 +54,7 @@ namespace Icyus
                                         address,
                                         doneCallback] 
                                         {
-                                            connect(address, doneCallback); 
+                                            connect(address, doneCallback);
                                         }};
         }
 
@@ -58,6 +65,8 @@ namespace Icyus
             std::ifstream file{ path, std::ios::binary };
             auto alreadySendBytes{ 0ull };
             auto currentRead{ 0ull };
+            size_t lastProgress = -1;
+            zmq::message_t okMsg;
 
             if (!file.is_open())
                 return;
@@ -66,13 +75,23 @@ namespace Icyus
             auto strSize = std::to_string(fileSize);
 
             socket.send(strSize.begin(), strSize.end());
+            socket.recv(&okMsg);
 
             while (file.read(buffPtr, granularity))
             {
                 currentRead = file.gcount();
+
                 socket.send(buffPtr, currentRead);
+                socket.recv(&okMsg);
+
                 alreadySendBytes += currentRead;
-                progressCallback((alreadySendBytes * 100) / fileSize);
+                size_t progress = (alreadySendBytes * 100) / fileSize;
+                if (lastProgress != progress)
+                {
+                    progressCallback((alreadySendBytes * 100) / fileSize);
+                    lastProgress = progress;
+
+                }
             }
 
             if ((currentRead = file.gcount()) > 0)
