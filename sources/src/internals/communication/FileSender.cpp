@@ -1,6 +1,5 @@
 #include <internals/communication/FileSender.hpp>
 #include <internals/utils/log.hpp>
-#include <internals/communication/utils/helpers.hpp>
 
 namespace Icyus
 {
@@ -18,11 +17,6 @@ namespace Icyus
         void FileSender::setGranularity(uintmax_t newGranularity) noexcept
         {
             granularity = newGranularity;
-        }
-
-        void FileSender::setMemoryLimit(uintmax_t newMemoryLimit) noexcept
-        {
-            memoryLimit = newMemoryLimit;
         }
 
         void FileSender::setUptadeProgressCallback(std::function<void(size_t)> newCallaback) noexcept
@@ -58,7 +52,7 @@ namespace Icyus
                                         }};
         }
 
-        void FileSender::send(const std::string &path)
+        void FileSender::send(const std::experimental::filesystem::path &path)
         {
             std::vector<char> buffer(granularity);
             char *buffPtr = &buffer[0];
@@ -66,23 +60,19 @@ namespace Icyus
             auto alreadySendBytes{ 0ull };
             auto currentRead{ 0ull };
             size_t lastProgress = -1;
-            zmq::message_t okMsg;
+            auto fileSize = std::experimental::filesystem::file_size(path);
 
             if (!file.is_open())
                 return;
 
-            auto fileSize = std::experimental::filesystem::file_size(path);
-            auto strSize = std::to_string(fileSize);
-
-            socket.send(strSize.begin(), strSize.end());
-            socket.recv(&okMsg);
+            sendHeader(path);
 
             while (file.read(buffPtr, granularity))
             {
                 currentRead = file.gcount();
 
                 socket.send(buffPtr, currentRead);
-                socket.recv(&okMsg);
+                socket.recv();
 
                 alreadySendBytes += currentRead;
                 size_t progress = (alreadySendBytes * 100) / fileSize;
@@ -90,7 +80,6 @@ namespace Icyus
                 {
                     progressCallback((alreadySendBytes * 100) / fileSize);
                     lastProgress = progress;
-
                 }
             }
 
@@ -98,6 +87,17 @@ namespace Icyus
                 socket.send(buffPtr, currentRead);
 
             progressCallback(100);
+        }
+
+        void FileSender::sendHeader(const std::experimental::filesystem::path &path)
+        {
+            auto fileSize = std::experimental::filesystem::file_size(path);
+            auto transferHeaderMsg = detail::TransferHeader::MsgFactory<zmq::message_t,
+                                                                        detail::TransferHeader::Formats::Xml>::create(path.filename().string(), 
+                                                                                                                      fileSize);
+
+            socket.send(transferHeaderMsg);
+            socket.recv();
         }
 
         void FileSender::sendAsync(const std::string &path)

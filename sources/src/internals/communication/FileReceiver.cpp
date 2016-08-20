@@ -1,7 +1,7 @@
 #include <internals/communication/FileReceiver.hpp>
+#include <internals/communication/details/TransferHeaderParser.hpp>
 
 #include <internals/utils/log.hpp>
-#include <internals/communication/utils/helpers.hpp>
 
 namespace Icyus
 {
@@ -17,26 +17,20 @@ namespace Icyus
         void FileReceiver::receiveFile()
         {
             constexpr auto ok{ "ok" };
-            auto fileSize{ 0ull };
             auto alreadyReceivedBytes{ 0ull };
             auto currentlyReceived{ 0ull };
             zmq::message_t msg;
-            zmq::message_t okMsg{ 1 };
             auto fileName{ "out" };
             std::ofstream out(fileName, std::ios::binary);
             LOG("receiveFile. File will be written to " << fileName);
 
-            socket.recv(&msg);
-            LOG("received file size: " << fileSize);
-            socket.send(okMsg);
-            LOG("send ok msg");
+            auto header = receiveHeader();
+            LOG("received file header: " << header.fileName << ", " << header.fileSize);
 
-            fileSize = std::stoull(msg.str());
-
-            while (alreadyReceivedBytes < fileSize)
+            while (alreadyReceivedBytes < header.fileSize)
             {
                 socket.recv(&msg);
-                socket.send(okMsg);
+                socket.send();
 
                 currentlyReceived = msg.size();
 
@@ -46,12 +40,12 @@ namespace Icyus
                 if (progressCallback)
                     progressCallback(alreadyReceivedBytes);
 
-                LOG("Received " << alreadyReceivedBytes << "/" << fileSize << "b (" << 100 * alreadyReceivedBytes / fileSize << "%)");
+                LOG("Received " << alreadyReceivedBytes << "/" << header.fileSize << "b (" << 100 * alreadyReceivedBytes / header.fileSize << "%)");
 
                 out.write(static_cast<const char*>(msg.data()), msg.size());
             }
 
-            LOG("receiving finished. Received " << alreadyReceivedBytes << "/" << fileSize << "bytes");
+            LOG("receiving finished. Received " << alreadyReceivedBytes << "/" << header.fileSize << "bytes");
         }
 
         void FileReceiver::startListening(const std::string &address)
@@ -71,5 +65,17 @@ namespace Icyus
             LOG("Starting receiving thread");
             receivingThread = std::thread{ [this] { receiveFile(); } };
         }
+
+        detail::TransferHeader::Header FileReceiver::receiveHeader()
+        {
+            zmq::message_t msg;
+
+            socket.recv(&msg);
+            socket.send();
+
+            return detail::TransferHeader::Parser<detail::TransferHeader::Formats::Xml>::parse(msg.cbegin(), msg.cend());
+        }
+
+
     }
 }
