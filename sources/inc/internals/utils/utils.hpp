@@ -6,32 +6,27 @@ namespace Icyus
 {
     namespace utils
     {
-        template <typename T>
-        constexpr long double operator"" KB(T val)
+        constexpr uintmax_t operator"" KB(uintmax_t val)
         {
             return val * 1024;
         }
         
-        template <typename T>
-        constexpr long double operator"" MB(T val)
+        constexpr uintmax_t operator"" MB(uintmax_t val)
         {
-            return val * 1KB;
+            return val * 1024KB;
         }
 
-        template <typename T>
-        constexpr long double operator"" GB(T val)
+        constexpr uintmax_t operator"" GB(uintmax_t val)
         {
-            return val * 1MB;
+            return val * 1024MB;
         }
 
-        template <typename T>
-        constexpr long double operator"" TB(T val)
+        constexpr uintmax_t operator"" TB(uintmax_t val)
         {
-            return val * 1GB;
+            return val * 1024GB;
         }
 
-        template <typename Size>
-        std::string formatSize(Size size)
+        std::string formatSize(uintmax_t size)
         {
             const char *suffix;
 

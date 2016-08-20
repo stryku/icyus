@@ -7,10 +7,12 @@ namespace Icyus
     {
         FileSender::FileSender(zmq::context_t &ctx,
                                uintmax_t granularity,
-                               std::function<void(size_t)> callaback) :
+                               std::function<void(size_t)> progressCallback,
+                               std::function<void(uintmax_t)> transferSpeedCallback) :
             context{ ctx },
             socket{ context, zmq::socket_type::req },
-            progressCallback{ callaback },
+            progressCallback{ progressCallback },
+            transferSpeedCallback{ transferSpeedCallback },
             granularity{ granularity }
         {}
 
@@ -23,6 +25,12 @@ namespace Icyus
         {
             progressCallback = newCallaback;
         }
+
+        void FileSender::setUptadeTransferSpeedCallback(std::function<void(uintmax_t)> newCallback) noexcept
+        {
+            transferSpeedCallback = newCallback;
+        }
+
 
         void FileSender::connect(const std::string &address, std::function<void()> doneCallback)
         {
@@ -61,6 +69,7 @@ namespace Icyus
             auto currentRead{ 0ull };
             size_t lastProgress = -1;
             auto fileSize = std::experimental::filesystem::file_size(path);
+            Clock::time_point chunkSendStart;
 
             if (!file.is_open())
                 return;
@@ -71,16 +80,14 @@ namespace Icyus
             {
                 currentRead = file.gcount();
 
+                chunkSendStart = Clock::now();
                 socket.send(buffPtr, currentRead);
                 socket.recv();
 
                 alreadySendBytes += currentRead;
-                size_t progress = (alreadySendBytes * 100) / fileSize;
-                if (lastProgress != progress)
-                {
-                    progressCallback((alreadySendBytes * 100) / fileSize);
-                    lastProgress = progress;
-                }
+
+                progressCallback((alreadySendBytes * 100) / fileSize);
+                updateTransferSpeed(chunkSendStart);
             }
 
             if ((currentRead = file.gcount()) > 0)
@@ -98,6 +105,17 @@ namespace Icyus
 
             socket.send(transferHeaderMsg);
             socket.recv();
+        }
+
+        void FileSender::updateTransferSpeed(const std::chrono::time_point<Clock>& start)
+        {
+            using s = std::chrono::seconds;
+            auto duration = Clock::now() - start;
+            auto sec = std::chrono::duration_cast<s>(duration);
+
+            transferSpeedCallback((sec.count() == 0) ? 
+                                  granularity : 
+                                  granularity / sec.count());
         }
 
         void FileSender::sendAsync(const std::string &path)

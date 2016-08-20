@@ -1,4 +1,5 @@
 #include <internals/controller/Controller.hpp>
+#include <internals/utils/utils.hpp>
 
 namespace Icyus
 {
@@ -64,6 +65,11 @@ namespace Icyus
                 model.newSenderProgress(progress);
             });
 
+            sender.setUptadeTransferSpeedCallback([this](uintmax_t speed)
+            {
+                model.newSenderTransferSpeed(speed);
+            });
+
             myforeachptr(views, setSenderProgressValue, 35);
             sender.sendAsync(path);
             myforeachptr(views, setSenderProgressValue, 100);
@@ -86,6 +92,11 @@ namespace Icyus
         {
             //myforeachptr(views, setSenderProgressValue, progress); // todo update views progress when multithread gui update will be implemented
             LOG("sender progress: " << progress << "%");
+        }
+
+        void Controller::newSenderTransferSpeed(uintmax_t progress)
+        {
+            LOG("sender transfer speed: " << utils::formatSize(progress));
         }
 
         void Controller::newReceiverProgress(size_t progress)
