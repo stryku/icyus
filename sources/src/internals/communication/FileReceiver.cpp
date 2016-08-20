@@ -1,7 +1,6 @@
 #include <internals/communication/FileReceiver.hpp>
 
 #include <internals/utils/log.hpp>
-#include <internals/communication/utils/helpers.hpp>
 
 namespace Icyus
 {

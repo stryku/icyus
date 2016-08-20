@@ -1,6 +1,5 @@
 #include <internals/communication/FileSender.hpp>
 #include <internals/utils/log.hpp>
-#include <internals/communication/utils/helpers.hpp>
 
 namespace Icyus
 {
@@ -18,11 +17,6 @@ namespace Icyus
         void FileSender::setGranularity(uintmax_t newGranularity) noexcept
         {
             granularity = newGranularity;
-        }
-
-        void FileSender::setMemoryLimit(uintmax_t newMemoryLimit) noexcept
-        {
-            memoryLimit = newMemoryLimit;
         }
 
         void FileSender::setUptadeProgressCallback(std::function<void(size_t)> newCallaback) noexcept
