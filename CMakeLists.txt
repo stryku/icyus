@@ -89,7 +89,8 @@ set (IcyusInternals_inc ${internals_inc_dir}/Internals.hpp
                         ${internals_inc_dir}/communication/details/TransferHeaderMsgFactory.hpp
                         ${internals_inc_dir}/communication/details/FormatTraits.hpp
                         ${internals_inc_dir}/utils/foreach.hpp
-                        ${internals_inc_dir}/utils/log.hpp)
+                        ${internals_inc_dir}/utils/log.hpp
+                        ${internals_inc_dir}/utils/utils.hpp)
        
        
 set (Icyus_src  ${src_dir}/main.cpp
