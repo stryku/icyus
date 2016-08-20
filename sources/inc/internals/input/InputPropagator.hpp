@@ -10,48 +10,14 @@ namespace Icyus
         class InputPropagator
         {
         public:
-            InputPropagator(IInputHandler &inputHandler) :
-                inputHandler{ inputHandler }
-            {}
+            InputPropagator(IInputHandler &inputHandler);
 
-            void chooseFile()
-            {
-                inputHandler.chooseFile();
-            }
-
-            void send()
-            {
-                inputHandler.send();
-            }
-
-            void connect()
-            {
-                inputHandler.connect();
-            }
-
-            void startListening()
-            {
-                inputHandler.receiverStartListening();
-            }
-
-            void newReceiverAddress(const std::string &address)
-            {
-                inputHandler.newReceiverAddress(address);
-            }
-
-            InputCallbacks getCallbacks()
-            {
-                return {
-                    [this](bool) { chooseFile(); },
-                    [this](bool) { send(); },
-                    [this](bool) { connect(); },
-                    [this](const std::string &address) { newReceiverAddress(address); },
-
-                    {
-                        [this](bool) { startListening(); }
-                    }
-                };
-            }
+            void chooseFile();
+            void send();
+            void connect();
+            void startListening();
+            void newReceiverAddress(const std::string &address);
+            InputCallbacks getCallbacks();
 
         private:
             IInputHandler &inputHandler;

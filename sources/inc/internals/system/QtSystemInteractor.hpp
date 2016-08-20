@@ -11,12 +11,7 @@ namespace Icyus
         class QtSystemInteractor final : public Icyus::System::ISystemInteractor
         {
         public:
-            std::string chooseFile(const std::string &startPath = {}) override
-            {
-                auto path = QFileDialog::getOpenFileName(nullptr, "Choose file", QString::fromStdString(startPath));
-                return path.toStdString();
-            }
-
+            std::string chooseFile(const std::string &startPath = {}) override;
         };
     }
 }

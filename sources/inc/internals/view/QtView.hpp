@@ -12,9 +12,7 @@ namespace Icyus
         class QtView final : public IView
         {
         public:
-            QtView(QWidget *widgetContainer) :
-                widgetManager{ widgetContainer }
-            {}
+            QtView(QWidget *widgetContainer) noexcept;
 
             ~QtView() = default;
             QtView(QtView&&) = default;
@@ -23,61 +21,19 @@ namespace Icyus
             QtView(QtView&) = delete;
             QtView& operator=(QtView&) = delete;
 
-            void sendingStarted(size_t size) override
-            {
-                //todo disable controls
-            }
+            void connectWithInputPropagator(Icyus::Input::InputPropagator &propagator) override;
 
-            void setReceiverAddress(const std::string &address) override
-            {
-                widgetManager.setReceiverAddress(address);
-            }
+            void sendingStarted(size_t size) override;
+            void setFileToSend(const std::string &path) override;
+            void setSenderProgressBounds(int min, int max) override;
+            void setSenderProgressValue(int value) override;
+            void setSenderConnectedStatus(const std::string &status) override;
 
-            void connectWithInputPropagator(Icyus::Input::InputPropagator &propagator) override
-            {
-                widgetManager.connectInputWithCallbacks(propagator.getCallbacks());
-            }
-
-            void setFileToSend(const std::string &path) override
-            {
-                widgetManager.setFileToSendLabel(QString::fromStdString(path));
-            }
-
-            void setSenderProgressBounds(int min, int max) override
-            {
-                widgetManager.setSenderProgressBarBounds(min, max);
-            }
-
-            void setSenderProgressValue(int value) override
-            {
-                widgetManager.setSenderProgressBarValue(value);
-            }
-
-            void setSenderConnectedStatus(const std::string &status) override
-            {
-                widgetManager.setSenderConnectedStatus(QString::fromStdString(status));
-            }
-
-
-            void setReceiverListeningStatus(const std::string &status) override
-            {
-                widgetManager.setReceiverListeningStatus(status);
-            }
-
-            void setReceivingFileName(const std::string &name) override
-            {
-                widgetManager.setReceivingFileName(QString::fromStdString(name));
-            }
-
-            void setReceiverProgressBounds(int min, int max) override
-            {
-                widgetManager.setReceiverProgressBarBounds(min, max);
-            }
-
-            void setReceiverProgressValue(int value) override
-            {
-                widgetManager.setReceiverProgressBarValue(value);
-            }
+            void setReceiverAddress(const std::string &address) override;
+            void setReceiverListeningStatus(const std::string &status) override;
+            void setReceivingFileName(const std::string &name) override;
+            void setReceiverProgressBounds(int min, int max) override;
+            void setReceiverProgressValue(int value) override;
 
         private:
             detail::QtWidgetManager widgetManager;

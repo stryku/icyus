@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 namespace Icyus
 {
     namespace Model
@@ -8,9 +10,10 @@ namespace Icyus
         {
         public:
             ~IModelObserver() = default;
-
+            
             virtual void newSenderConnectionStatus(const std::string &status) = 0;
             virtual void newSenderProgress(size_t progress) = 0;
+            virtual void newSenderTransferSpeed(uintmax_t progress) = 0;
             virtual void newModelReceiverAddress(const std::string &address) = 0;
             virtual void senderFilePathChanged(const std::string &newPath) = 0;
             virtual void senderProgressValueChanged(int newValue) = 0;
