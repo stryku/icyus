@@ -73,6 +73,7 @@ set (IcyusInternals_inc ${internals_inc_dir}/Internals.hpp
                         ${internals_inc_dir}/view/IView.hpp
                         ${internals_inc_dir}/view/detail/QtViewControls.hpp
                         ${internals_inc_dir}/view/detail/QtWidgetManager.hpp
+                        ${internals_inc_dir}/view/detail/GuiUpdater.hpp
                         ${internals_inc_dir}/input/InputCallbacks.hpp
                         ${internals_inc_dir}/input/InputPropagator.hpp
                         ${internals_inc_dir}/input/IInputObserver.hpp
@@ -90,7 +91,7 @@ set (IcyusInternals_inc ${internals_inc_dir}/Internals.hpp
                         ${internals_inc_dir}/communication/details/FormatTraits.hpp
                         ${internals_inc_dir}/utils/foreach.hpp
                         ${internals_inc_dir}/utils/log.hpp
-                        ${internals_inc_dir}/utils/utils.hpp)
+                        ${internals_inc_dir}/utils/utils.hpp) 
        
        
 set (Icyus_src  ${src_dir}/main.cpp
@@ -100,10 +101,14 @@ set (Icyus_inc   ${inc_dir}/mainwindow.hpp
                  ${inc_dir}/InternalsCreators.hpp)
 
 
-set (Icyus_hdr ${inc_dir}/mainwindow.hpp)
+set (Icyus_hdr ${inc_dir}/mainwindow.hpp
+               ${internals_inc_dir}/view/detail/GuiUpdater.hpp
+               ${internals_inc_dir}/view/detail/QtWidgetManager.hpp)
 set (Icyus_ui  ${ui_dir}/mainwindow.ui)
 
 qt5_wrap_cpp(Icyus_hdr_moc ${Icyus_hdr})
+#qt5_wrap_cpp(Icyus_widgetManager_moc ${internals_inc_dir}/view/detail/QtWidgetManager.hpp)
+#qt5_wrap_cpp(Icyus_tmp_moc ${internals_inc_dir}/view/QtView.hpp)
 qt5_wrap_ui (Icyus_ui_moc  ${Icyus_ui})
 
 

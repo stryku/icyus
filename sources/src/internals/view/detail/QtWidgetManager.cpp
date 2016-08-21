@@ -9,19 +9,19 @@ namespace Icyus
             QtWidgetManager::QtWidgetManager(QWidget *parent, const QString &uiFilePath) :
                 formWidget{ createWidget(parent, uiFilePath) },
                 controls{ extractControls(formWidget) }
-            {}
+            {
+
+            }
 
             QString QtWidgetManager::getReceiverIp() const noexcept
             {
                 return controls.receiverTab.labelIp->text();
             }
 
-            void QtWidgetManager::setReceiverAddress(const std::string &address)
+            void QtWidgetManager::setReceiverAddress(const QString &address)
             {
-                auto str = QString::fromStdString(address);
-
-                if (controls.senderTab.lineEditReceiverIp->text() != str)
-                    controls.senderTab.lineEditReceiverIp->setText(str);
+                if (controls.senderTab.lineEditReceiverIp->text() != address)
+                    controls.senderTab.lineEditReceiverIp->setText(address);
             }
 
             void QtWidgetManager::setFileToSendLabel(const QString &path)
@@ -49,10 +49,10 @@ namespace Icyus
             }
 
 
-            void QtWidgetManager::setReceiverListeningStatus(const std::string &status)
+            void QtWidgetManager::setReceiverListeningStatus(const QString &status)
             {
                 controls.receiverTab.labelListeningStatus->setText(QString("%1: %2").arg("Listening status",
-                                                                   QString::fromStdString(status)));
+                                                                   status));
             }
 
             void QtWidgetManager::setReceivingFileName(const QString &name)

@@ -2,6 +2,7 @@
 
 #include <internals/view/IView.hpp>
 #include <internals/view/detail/QtWidgetManager.hpp>
+#include <internals/view/detail/GuiUpdater.hpp>
 
 #include <QString>
 
@@ -25,18 +26,17 @@ namespace Icyus
 
             void sendingStarted(size_t size) override;
             void setFileToSend(const std::string &path) override;
-            void setSenderProgressBounds(int min, int max) override;
             void setSenderProgressValue(int value) override;
             void setSenderConnectedStatus(const std::string &status) override;
 
             void setReceiverAddress(const std::string &address) override;
             void setReceiverListeningStatus(const std::string &status) override;
             void setReceivingFileName(const std::string &name) override;
-            void setReceiverProgressBounds(int min, int max) override;
             void setReceiverProgressValue(int value) override;
 
         private:
             detail::QtWidgetManager widgetManager;
+            detail::GuiUpdater updater;
         };
     }
 }
