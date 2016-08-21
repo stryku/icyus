@@ -75,9 +75,8 @@ namespace Icyus
                 model.newSenderTransferSpeed(speed);
             });
 
-            myforeachptr(views, setSenderProgressValue, 35);
+            myforeachptr(views, setSenderProgressValue, 0);
             sender.sendAsync(path);
-            myforeachptr(views, setSenderProgressValue, 100);
         }
 
         void Controller::newReceiverAddress(const std::string &address)
