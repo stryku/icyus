@@ -19,6 +19,11 @@ namespace Icyus
             FileReceiver(zmq::context_t &ctx,
                          std::function<void(size_t)> callaback = {});
 
+            void setProgressCallback(std::function<void(size_t)> callback)
+            {
+                progressCallback = callback;
+            }
+
             void receiveFile();
 
             void startListening(const std::string &address = "tcp://*:1666");

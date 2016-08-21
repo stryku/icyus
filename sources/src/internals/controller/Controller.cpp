@@ -28,6 +28,11 @@ namespace Icyus
 
         void Controller::receiverStartListening()
         {
+            receiver.setProgressCallback([this](size_t progress)
+            {
+                model.newReceiverProgress(progress);
+            });
+
             model.newReceiverListeningStatus("listening");
             receiver.startListening();
         }
