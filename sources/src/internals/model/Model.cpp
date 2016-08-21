@@ -51,7 +51,7 @@ namespace Icyus
             senderConnectionStatus = status;
 
             for (auto observer : modelObservers)
-                observer->newSenderConnectionStatus(senderConnectionStatus);
+                observer->newSenderConnectionStatus(status);
         }
 
 
@@ -60,7 +60,7 @@ namespace Icyus
             receiverListeningStatus = status;
 
             for (auto observer : modelObservers)
-                observer->newReceiverListeningStatus(senderConnectionStatus);
+                observer->newReceiverListeningStatus(status);
         }
 
         void Model::registerObserver(IModelObserver *observer)

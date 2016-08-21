@@ -28,6 +28,11 @@ namespace Icyus
 
         void Controller::receiverStartListening()
         {
+            receiver.setProgressCallback([this](size_t progress)
+            {
+                model.newReceiverProgress(progress);
+            });
+
             model.newReceiverListeningStatus("listening");
             receiver.startListening();
         }
@@ -90,7 +95,7 @@ namespace Icyus
 
         void Controller::newSenderProgress(size_t progress)
         {
-            //myforeachptr(views, setSenderProgressValue, progress); // todo update views progress when multithread gui update will be implemented
+            myforeachptr(views, setSenderProgressValue, progress); // todo update views progress when multithread gui update will be implemented
             LOG("sender progress: " << progress << "%");
         }
 
@@ -101,7 +106,7 @@ namespace Icyus
 
         void Controller::newReceiverProgress(size_t progress)
         {
-            //myforeachptr(views, setReceiverProgressValue, progress);// todo update views progress when multithread gui update will be implemented
+            myforeachptr(views, setReceiverProgressValue, progress);// todo update views progress when multithread gui update will be implemented
             LOG("receiver progress: " << progress << "%");
         }
 

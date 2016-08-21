@@ -38,7 +38,7 @@ namespace Icyus
                 LOG("received file chunk of size: " << currentlyReceived);
 
                 if (progressCallback)
-                    progressCallback(alreadyReceivedBytes);
+                    progressCallback(100 * alreadyReceivedBytes / header.fileSize);
 
                 LOG("Received " << alreadyReceivedBytes << "/" << header.fileSize << "b (" << 100 * alreadyReceivedBytes / header.fileSize << "%)");
 

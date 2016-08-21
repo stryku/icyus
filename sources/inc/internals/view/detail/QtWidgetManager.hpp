@@ -10,6 +10,7 @@
 #include <QFile>
 #include <QProgressBar>
 #include <QLineEdit>
+#include <QThread>
 
 #include <functional>
 
@@ -19,14 +20,31 @@ namespace Icyus
     {
         namespace detail
         {
-            class QtWidgetManager final
+
+            
+
+            class QtWidgetManager final : public QObject
             {
+                Q_OBJECT
+
+            public Q_SLOTS:
+                void setReceiverAddress(const QString &address);
+                void setFileToSendLabel(const QString &path);
+                void setSenderProgressBarBounds(int min, int max);
+                void setSenderProgressBarValue(int value);
+                void setSenderConnectedStatus(const QString &status);
+
+                void setReceiverListeningStatus(const QString &status);
+                void setReceivingFileName(const QString &name);
+                void setReceiverProgressBarBounds(int min, int max);
+                void setReceiverProgressBarValue(int value);
+
             public:
                 explicit QtWidgetManager(QWidget *parent, const QString &uiFilePath = "uiforms/form.ui");
 
                 QString getReceiverIp() const noexcept;
 
-                void setReceiverAddress(const std::string &address);
+                /*void setReceiverAddress(const std::string &address);
                 void setFileToSendLabel(const QString &path);
                 void setSenderProgressBarBounds(int min, int max);
                 void setSenderProgressBarValue(int value);
@@ -35,7 +53,7 @@ namespace Icyus
                 void setReceiverListeningStatus(const std::string &status);
                 void setReceivingFileName(const QString &name);
                 void setReceiverProgressBarBounds(int min, int max);
-                void setReceiverProgressBarValue(int value);
+                void setReceiverProgressBarValue(int value);*/
 
                 QWidget* getWidget();
 
