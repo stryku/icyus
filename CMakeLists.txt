@@ -62,8 +62,6 @@ include_directories (${inc_dir}
 set (IcyusInternals_src ${internals_dir}/view/QtView.cpp
                         ${internals_dir}/view/detail/QtWidgetManager.cpp
                         ${internals_dir}/controller/Controller.cpp
-                        ${internals_dir}/communication/FileReceiver.cpp
-                        ${internals_dir}/communication/FileSender.cpp
                         ${internals_dir}/input/InputPropagator.cpp
                         ${internals_dir}/model/Model.cpp
                         ${internals_dir}/system/QtSystemInteractor.cpp)
@@ -89,9 +87,10 @@ set (IcyusInternals_inc ${internals_inc_dir}/Internals.hpp
                         ${internals_inc_dir}/communication/details/TransferHeader.hpp
                         ${internals_inc_dir}/communication/details/TransferHeaderMsgFactory.hpp
                         ${internals_inc_dir}/communication/details/FormatTraits.hpp
+                        ${internals_inc_dir}/communication/details/ZmqSocket.hpp
                         ${internals_inc_dir}/utils/foreach.hpp
                         ${internals_inc_dir}/utils/log.hpp
-                        ${internals_inc_dir}/utils/utils.hpp) 
+                        ${internals_inc_dir}/utils/utils.hpp)  
        
        
 set (Icyus_src  ${src_dir}/main.cpp
