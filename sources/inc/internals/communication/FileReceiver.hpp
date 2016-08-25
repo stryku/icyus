@@ -33,7 +33,7 @@ namespace Icyus
                 constexpr auto ok{ "ok" };
                 auto alreadyReceivedBytes{ 0ull };
                 auto currentlyReceived{ 0ull };
-                zmq::message_t msg;
+                Socket::MsgType msg;
 
                 auto header = receiveHeader();
                 LOG("received file header: " << header.fileName << ", " << header.fileSize);
@@ -43,7 +43,7 @@ namespace Icyus
 
                 while (alreadyReceivedBytes < header.fileSize)
                 {
-                    socket.recv(&msg);
+                    socket.recv(msg);
                     socket.send();
 
                     currentlyReceived = msg.size();
@@ -80,16 +80,14 @@ namespace Icyus
                 receivingThread = std::thread{ [this] { receiveFile(); } };
             }
 
-
-
         private:
             detail::TransferHeader::Header receiveHeader()
             {
                 using ParseMethod = detail::TransferHeader::Parser<detail::TransferHeader::Formats::Xml>::parse;
 
-                zmq::message_t msg;
+                Socket::MsgType msg;
 
-                socket.recv(&msg);
+                socket.recv(msg);
                 socket.send();
 
                 return ParseMethod(msg.cbegin(), msg.cend());

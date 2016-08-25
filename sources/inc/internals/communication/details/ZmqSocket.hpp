@@ -13,6 +13,8 @@ namespace Icyus
             class ZmqSocket
             {
             public:
+                using MsgType = zmq::message_t;
+
                 ZmqSocket(zmq::context_t &ctx,
                           zmq::socket_type socketType) :
                     context{ ctx },
@@ -34,9 +36,9 @@ namespace Icyus
                     return socket.send(data, size);
                 }
 
-                size_t recv(void *data, size_t size)
+                bool recvMsg(zmq::message_t &msg)
                 {
-                    return socket.recv(data, size);
+                    return socket.recv(&msg);
                 }
 
             private:
