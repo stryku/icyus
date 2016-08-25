@@ -80,15 +80,19 @@ namespace Icyus
                 receivingThread = std::thread{ [this] { receiveFile(); } };
             }
 
+
+
         private:
             detail::TransferHeader::Header receiveHeader()
             {
+                using ParseMethod = detail::TransferHeader::Parser<detail::TransferHeader::Formats::Xml>::parse;
+
                 zmq::message_t msg;
 
                 socket.recv(&msg);
                 socket.send();
 
-                return detail::TransferHeader::Parser<detail::TransferHeader::Formats::Xml>::parse(msg.cbegin(), msg.cend());
+                return ParseMethod(msg.cbegin(), msg.cend());
             }
 
             Socket socket;
