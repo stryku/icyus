@@ -141,10 +141,13 @@ add_executable(Icyus
 target_link_libraries (Icyus Qt5::Widgets Qt5::UiTools ${ZMQ_LIBRARIES})
 
 
-set( TEST_SRC_FILES ${test_src_dir}/main.cpp)
+set( TEST_SRC_FILES ${test_src_dir}/main.cpp
+                    ${test_src_dir}/FileSenderTest.cpp)
+                    
+set (TEST_INC_FILES ${test_src_dir}/details/SocketMock.hpp)
 
 
-add_executable(${PROJECT_TEST_NAME} ${TEST_SRC_FILES})
+add_executable(${PROJECT_TEST_NAME} ${TEST_SRC_FILES} ${TEST_INC_FILES})
 add_dependencies(${PROJECT_TEST_NAME} googletest googlemock)
 
 if(NOT WIN32 OR MINGW)
