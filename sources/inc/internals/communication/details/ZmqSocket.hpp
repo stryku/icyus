@@ -36,9 +36,24 @@ namespace Icyus
                     return socket.send(data, size);
                 }
 
-                bool recvMsg(zmq::message_t &msg)
+                size_t send(zmq::message_t &msg)
+                {
+                    return socket.send(msg);
+                }
+
+                bool recv(zmq::message_t &msg)
                 {
                     return socket.recv(&msg);
+                }
+
+                void recvDummy()
+                {
+                    socket.recv();
+                }
+
+                void sendDummy()
+                {
+                    socket.send();
                 }
 
             private:

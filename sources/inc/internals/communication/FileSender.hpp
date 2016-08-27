@@ -95,7 +95,7 @@ namespace Icyus
 
                     chunkSendStart = Clock::now();
                     socket.send(buffPtr, currentRead);
-                    socket.recv();
+                    socket.recvDummy();
 
                     alreadySendBytes += currentRead;
 
@@ -127,7 +127,7 @@ namespace Icyus
                                                                   fileSize);
 
                 socket.send(transferHeaderMsg);
-                socket.recv();
+                socket.recvDummy();
             }
             void updateTransferSpeed(const std::chrono::time_point<Clock> &start)
             {

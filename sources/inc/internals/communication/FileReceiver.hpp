@@ -1,6 +1,7 @@
 #pragma once
 
 #include <internals/communication/details/TransferHeader.hpp>
+#include <internals/communication/details/TransferHeaderParser.hpp>
 #include <internals/utils/log.hpp>
 
 #include <zmq/zmq.hpp>
@@ -44,7 +45,7 @@ namespace Icyus
                 while (alreadyReceivedBytes < header.fileSize)
                 {
                     socket.recv(msg);
-                    socket.send();
+                    socket.sendDummy();
 
                     currentlyReceived = msg.size();
 
@@ -83,14 +84,14 @@ namespace Icyus
         private:
             detail::TransferHeader::Header receiveHeader()
             {
-                using ParseMethod = detail::TransferHeader::Parser<detail::TransferHeader::Formats::Xml>::parse;
+                using Parser = detail::TransferHeader::Parser<detail::TransferHeader::Formats::Xml>;
 
                 Socket::MsgType msg;
 
                 socket.recv(msg);
-                socket.send();
+                socket.sendDummy();
 
-                return ParseMethod(msg.cbegin(), msg.cend());
+                return Parser::parse(msg.cbegin(), msg.cend());
             }
 
             Socket socket;
