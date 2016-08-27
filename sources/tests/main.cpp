@@ -1,6 +1,8 @@
 #include <gtest/gtest/gtest.h>
+#include <gtest/gmock/gmock.h>
 
-TEST(TMP, tmp_test)
+int main(int argc, char *argv[])
 {
-    EXPECT_EQ(1, 1);
+    ::testing::InitGoogleMock(&argc, argv);
+    return RUN_ALL_TESTS();
 }

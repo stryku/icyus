@@ -15,9 +15,9 @@ enable_testing()
 set(PROJECT_TEST_NAME ${PROJECT_NAME_STR}_test)
 
 
-include_directories(${GTEST_INCLUDE_DIRS} ${COMMON_INCLUDES})
-
-
+include_directories(${GTEST_INCLUDE_DIRS} ${GMOCK_INCLUDE_DIRS} ${COMMON_INCLUDES})
+message(${GTEST_INCLUDE_DIRS})
+message(${GMOCK_INCLUDE_DIRS})
 
 
 include(CheckCXXCompilerFlag)
@@ -145,21 +145,27 @@ set( TEST_SRC_FILES ${test_src_dir}/main.cpp)
 
 
 add_executable(${PROJECT_TEST_NAME} ${TEST_SRC_FILES})
-add_dependencies(${PROJECT_TEST_NAME} googletest)
+add_dependencies(${PROJECT_TEST_NAME} googletest googlemock)
 
 if(NOT WIN32 OR MINGW)
     target_link_libraries(${PROJECT_TEST_NAME}
         ${GTEST_LIBS_DIR}/libgtest.a
         ${GTEST_LIBS_DIR}/libgtest_main.a
+        ${GMOCK_LIBS_DIR}/libgmock.a
+        ${GMOCK_LIBS_DIR}/libmock_main.a
         )
 else()
     target_link_libraries(${PROJECT_TEST_NAME}
         debug ${GTEST_LIBS_DIR}/DebugLibs/${CMAKE_FIND_LIBRARY_PREFIXES}gtest${CMAKE_FIND_LIBRARY_SUFFIXES}
         optimized ${GTEST_LIBS_DIR}/ReleaseLibs/${CMAKE_FIND_LIBRARY_PREFIXES}gtest${CMAKE_FIND_LIBRARY_SUFFIXES}
+        debug ${GMOCK_LIBS_DIR}/DebugLibs/${CMAKE_FIND_LIBRARY_PREFIXES}gmock${CMAKE_FIND_LIBRARY_SUFFIXES}
+        optimized ${GMOCK_LIBS_DIR}/ReleaseLibs/${CMAKE_FIND_LIBRARY_PREFIXES}gmock${CMAKE_FIND_LIBRARY_SUFFIXES}
         )
     target_link_libraries(${PROJECT_TEST_NAME}
         debug ${GTEST_LIBS_DIR}/DebugLibs/${CMAKE_FIND_LIBRARY_PREFIXES}gtest_main${CMAKE_FIND_LIBRARY_SUFFIXES}
         optimized ${GTEST_LIBS_DIR}/ReleaseLibs/${CMAKE_FIND_LIBRARY_PREFIXES}gtest_main${CMAKE_FIND_LIBRARY_SUFFIXES}
+        debug ${GMOCK_LIBS_DIR}/DebugLibs/${CMAKE_FIND_LIBRARY_PREFIXES}gmock_main${CMAKE_FIND_LIBRARY_SUFFIXES}
+        optimized ${GMOCK_LIBS_DIR}/ReleaseLibs/${CMAKE_FIND_LIBRARY_PREFIXES}gmock_main${CMAKE_FIND_LIBRARY_SUFFIXES}
         )
 endif()
 
