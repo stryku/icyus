@@ -62,6 +62,7 @@ set (src_root ${CMAKE_CURRENT_SOURCE_DIR})
 set (src_dir ${src_root}/sources/src)
 set (inc_dir ${src_root}/sources/inc)
 set (test_src_dir ${src_root}/sources/tests)
+set (test_inc_dir ${test_src_dir}/details)
 set (internals_dir ${src_dir}/internals)
 set (internals_inc_dir ${inc_dir}/internals)
 set (ui_dir ${src_root}/uiforms)
@@ -76,14 +77,16 @@ message (${install_dir})
 include_directories (${inc_dir}
                      ${Qt5UiTools_INCLUDE_DIRS}
                      ${PROJECT_SOURCE_DIR}
-                     ${PROJECT_BINARY_DIR}) 
+                     ${PROJECT_BINARY_DIR}
+                     ${test_inc_dir}) 
                      
 #internals 
 set (IcyusInternals_src ${internals_dir}/view/QtView.cpp
                         ${internals_dir}/view/detail/QtWidgetManager.cpp
                         ${internals_dir}/input/InputPropagator.cpp
                         ${internals_dir}/model/Model.cpp
-                        ${internals_dir}/system/QtSystemInteractor.cpp)
+                        ${internals_dir}/system/QtSystemInteractor.cpp
+                        ${internals_dir}/utils/utils.cpp)
  
 set (IcyusInternals_inc ${internals_inc_dir}/Internals.hpp
                         ${internals_inc_dir}/view/QtView.hpp
@@ -109,7 +112,8 @@ set (IcyusInternals_inc ${internals_inc_dir}/Internals.hpp
                         ${internals_inc_dir}/communication/details/ZmqSocket.hpp
                         ${internals_inc_dir}/utils/foreach.hpp
                         ${internals_inc_dir}/utils/log.hpp
-                        ${internals_inc_dir}/utils/utils.hpp)  
+                        ${internals_inc_dir}/utils/utils.hpp
+                        ${internals_inc_dir}/utils/TestClass.hpp)  
        
        
 set (Icyus_src  ${src_dir}/main.cpp
@@ -144,7 +148,8 @@ target_link_libraries (Icyus Qt5::Widgets Qt5::UiTools ${ZMQ_LIBRARIES})
 set( TEST_SRC_FILES ${test_src_dir}/main.cpp
                     ${test_src_dir}/FileSenderTest.cpp)
                     
-set (TEST_INC_FILES ${test_src_dir}/details/SocketMock.hpp)
+set (TEST_INC_FILES ${test_src_dir}/details/SocketMock.hpp
+                    ${test_src_dir}/details/FileMock.hpp)
 
 
 add_executable(${PROJECT_TEST_NAME} ${TEST_SRC_FILES} ${TEST_INC_FILES})

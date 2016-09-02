@@ -1,6 +1,8 @@
 #pragma once
 
 #include <internals/communication/details/TransferHeaderMsgFactory.hpp>
+#include <internals/utils/utils.hpp>
+#include <internals/utils/log.hpp>
 
 #include <zmq/zmq.hpp>
 
@@ -9,12 +11,13 @@
 #include <thread>
 #include <filesystem>
 #include <chrono>
+#include <string>
 
 namespace Icyus
 {
     namespace Communication
     {
-        template <typename Socket>
+        template <typename Socket, typename File>
         class FileSender
         {
         public:
@@ -74,24 +77,23 @@ namespace Icyus
             }
 
 
-            void send(const std::experimental::filesystem::path &path) {
+            void send(File &file)
+            {
                 std::vector<char> buffer(granularity);
                 char *buffPtr = &buffer[0];
-                std::ifstream file{ path, std::ios::binary };
                 auto alreadySendBytes{ 0ull };
                 auto currentRead{ 0ull };
                 size_t lastProgress = -1;
-                auto fileSize = std::experimental::filesystem::file_size(path);
+                //auto fileSize = std::experimental::filesystem::file_size(path);
+                auto fileSize = file.size();
                 Clock::time_point chunkSendStart;
 
-                if (!file.is_open())
-                    return;
+                sendHeader(file);
 
-                sendHeader(path);
-
-                while (file.read(buffPtr, granularity))
+                while (alreadySendBytes < fileSize)
                 {
-                    currentRead = file.gcount();
+                    file.read(buffPtr, granularity);
+                    currentRead = file.lastReadCount();
 
                     chunkSendStart = Clock::now();
                     socket.send(buffPtr, currentRead);
@@ -99,14 +101,11 @@ namespace Icyus
 
                     alreadySendBytes += currentRead;
 
-                    progressCallback((alreadySendBytes * 100) / fileSize);
+                    updateProgress((alreadySendBytes * 100) / fileSize);
                     updateTransferSpeed(chunkSendStart);
                 }
 
-                if ((currentRead = file.gcount()) > 0)
-                    socket.send(buffPtr, currentRead);
-
-                progressCallback(100);
+                updateProgress(100);
             }
 
             void sendAsync(const std::string &path)
@@ -117,14 +116,20 @@ namespace Icyus
                 asyncThread = std::thread{ [this, path] { send(path); } };
             }
 
+            std::enable_if_t<Icyus::utils::isTestClass<Socket>, Socket&> getSocket()
+            {
+                return socket;
+            }
+
         private:
             using Clock = std::chrono::system_clock;
-            void sendHeader(const std::experimental::filesystem::path &path)
+            void sendHeader(const File &file)
             {
-                auto fileSize = std::experimental::filesystem::file_size(path);
-                auto transferHeaderMsg = detail::TransferHeader::MsgFactory<zmq::message_t,
-                    detail::TransferHeader::Formats::Xml>::create(path.filename().string(),
-                                                                  fileSize);
+                auto transferHeaderMsg = detail::TransferHeader::MsgFactory<Socket::MessageType,
+                    detail::TransferHeader::Formats::Xml>::create(file.name(),
+                                                                  file.size());
+
+                LOG("sending header: " << std::string(transferHeaderMsg.cbegin(), transferHeaderMsg.cend()));
 
                 socket.send(transferHeaderMsg);
                 socket.recvDummy();
@@ -138,6 +143,13 @@ namespace Icyus
                 transferSpeedCallback((sec.count() == 0) ?
                                       granularity :
                                       granularity / sec.count());
+            }
+            void updateProgress(size_t progress)
+            {
+                if (progressCallback)
+                    progressCallback(100);
+                else
+                    LOG("FileSender::progressCallback is empty");
             }
 
             Socket socket;

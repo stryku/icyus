@@ -1,5 +1,7 @@
 #pragma once
 
+#include <internals/utils/utils.hpp>
+
 #include <gtest/gtest/gtest.h>
 #include <gtest/gmock/gmock.h>
 
@@ -11,17 +13,17 @@ namespace Icyus
     {
         namespace Mocks
         {
-            class SocketMock
+            struct SocketMock : public Icyus::Tests::TestClass
             {
-                using MsgType = std::vector<char>;
+                using MessageType = std::vector<char>;
 
-                MOCK_METHOD1(connect, void(const std::string &address));
-                MOCK_METHOD1(bind, void(const std::string &address));
-                MOCK_METHOD2(send, size_t(const void *data, size_t size));
-                MOCK_METHOD1(send, size_t(MsgType &msg));
-                MOCK_METHOD1(recv, bool(MsgType &msg));
-                MOCK_METHOD0(recvDummy, void());
-                MOCK_METHOD0(sendDummy, void());
+                MOVABLE_MOCK_METHOD1(connect, void(const std::string &address));
+                MOVABLE_MOCK_METHOD1(bind, void(const std::string &address));
+                MOVABLE_MOCK_METHOD2(send, size_t(const void *data, size_t size));
+                MOVABLE_MOCK_METHOD1(send, size_t(MessageType &msg));
+                MOVABLE_MOCK_METHOD1(recv, bool(MessageType &msg));
+                MOVABLE_MOCK_METHOD0(recvDummy, void());
+                MOVABLE_MOCK_METHOD0(sendDummy, void());
             };
         }
     }
