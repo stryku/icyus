@@ -62,7 +62,7 @@ set (src_root ${CMAKE_CURRENT_SOURCE_DIR})
 set (src_dir ${src_root}/sources/src)
 set (inc_dir ${src_root}/sources/inc)
 set (test_src_dir ${src_root}/sources/tests)
-set (test_inc_dir ${test_src_dir}/details)
+set (test_inc_dir ${test_src_dir})
 set (internals_dir ${src_dir}/internals)
 set (internals_inc_dir ${inc_dir}/internals)
 set (ui_dir ${src_root}/uiforms)
@@ -149,7 +149,8 @@ set( TEST_SRC_FILES ${test_src_dir}/main.cpp
                     ${test_src_dir}/FileSenderTest.cpp)
                     
 set (TEST_INC_FILES ${test_src_dir}/details/SocketMock.hpp
-                    ${test_src_dir}/details/FileMock.hpp)
+                    ${test_src_dir}/details/FileMock.hpp
+                    ${test_src_dir}/utils/utils.hpp)
 
 
 add_executable(${PROJECT_TEST_NAME} ${TEST_SRC_FILES} ${TEST_INC_FILES})
