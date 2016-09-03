@@ -32,7 +32,7 @@ namespace Icyus
             {}
 
 
-            void setGranularity(uintmax_t newGranularity) noexcept
+            void setGranularity(uintmax_t newGranularity)
             {
                 if (newGranularity == 0)
                     throw std::runtime_error("FileSender granularity must be > 0");
@@ -79,7 +79,7 @@ namespace Icyus
                 } };
             }
 
-
+            
             void send(File &file)
             {
                 std::vector<char> buffer(granularity);
@@ -87,7 +87,6 @@ namespace Icyus
                 auto alreadySendBytes{ 0ull };
                 auto currentRead{ 0ull };
                 size_t lastProgress = -1;
-                //auto fileSize = std::experimental::filesystem::file_size(path);
                 auto fileSize = file.size();
                 Clock::time_point chunkSendStart;
 
@@ -143,9 +142,15 @@ namespace Icyus
                 auto duration = Clock::now() - start;
                 auto sec = std::chrono::duration_cast<s>(duration);
 
-                transferSpeedCallback((sec.count() == 0) ?
-                                      granularity :
-                                      granularity / sec.count());
+                if (transferSpeedCallback)
+                {
+                    transferSpeedCallback((sec.count() == 0) ?
+                                          granularity :
+                                          granularity / sec.count());
+                }
+                else
+                    LOG("FileSender::transferSpeedCallback is empty");
+
             }
             void updateProgress(size_t progress)
             {
