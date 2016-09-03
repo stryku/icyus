@@ -29,3 +29,31 @@ TEST(FileSenderTest, emptyFile_onlyHeaderSend)
 
     sender.send(fileMock);
 }
+
+TEST(FileSenderTest, emptyFile_exactHeader)
+{
+    using Socket = Icyus::Tests::Mocks::SocketMock;
+    using File = Icyus::Tests::Mocks::FileMock;
+    File fileMock;
+    Socket socket;
+    std::string filename = "file name.txt";
+
+    std::string expectedHeaderStr{ "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<header><filename>" + filename + "</filename><filesize>0</filesize></header>" };
+    auto expectedHeaderMsg = Socket::MessageType{ std::begin(expectedHeaderStr),
+        std::end(expectedHeaderStr) };
+
+    std::cout << expectedHeaderStr << "\n";
+
+    EXPECT_CALL(socket, send(expectedHeaderMsg));
+    EXPECT_CALL(socket, recvDummy());
+
+    EXPECT_CALL(fileMock, size()).
+        WillRepeatedly(Return(0));
+
+    EXPECT_CALL(fileMock, name()).
+        WillRepeatedly(Return(filename));
+
+    Icyus::Communication::FileSender<Socket, File> sender{ std::move(socket) };
+
+    sender.send(fileMock);
+}
