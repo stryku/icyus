@@ -57,3 +57,14 @@ TEST(FileSenderTest, emptyFile_exactHeader)
 
     sender.send(fileMock);
 }
+
+TEST(FileSenderTest, zeroGranularity_throw)
+{
+    using Socket = Icyus::Tests::Mocks::SocketMock;
+    using File = Icyus::Tests::Mocks::FileMock;
+    Socket socket;
+    File file;
+    Icyus::Communication::FileSender<Socket, File> sender{ std::move(socket), };
+
+    EXPECT_THROW(sender.setGranularity(0), std::runtime_error);
+}

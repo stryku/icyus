@@ -34,6 +34,9 @@ namespace Icyus
 
             void setGranularity(uintmax_t newGranularity) noexcept
             {
+                if (newGranularity == 0)
+                    throw std::runtime_error("FileSender granularity must be > 0");
+
                 granularity = newGranularity;
             }
 
