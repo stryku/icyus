@@ -6,6 +6,7 @@
 #include <internals/system/QtSystemInteractor.hpp>
 #include <internals/communication/FileSender.hpp>
 #include <internals/communication/FileReceiver.hpp>
+#include <internals/communication/details/ZmqSocket.hpp>
 
 #include <QWidget>
 
@@ -13,14 +14,22 @@ namespace Icyus
 {
     namespace InternalsCreators
     {
-        Icyus::Internals createLocalQt(QWidget *qtViewWidgetParent)
+        auto createLocalQt(QWidget *qtViewWidgetParent)
         {
+            using Socket = Communication::detail::ZmqSocket;
+            using ControllerType = Icyus::Controller::Controller<Icyus::Communication::FileSender<Socket>,
+                                                                 Icyus::Communication::FileReceiver<Socket>>;
+
             auto ctx = new zmq::context_t{ 1 };
-            auto sender = new Icyus::Communication::FileSender{ *ctx };
-            auto receiver = new Icyus::Communication::FileReceiver{ *ctx };
+            auto sender = new Icyus::Communication::FileSender<Socket>{ Socket{ *ctx, zmq::socket_type::req } };
+            auto receiver = new Icyus::Communication::FileReceiver<Socket>{ Socket{*ctx, zmq::socket_type::rep} };
             auto systemInteractor = new Icyus::System::QtSystemInteractor();
             auto model = new Icyus::Model::Model();
-            auto controller = new Icyus::Controller::Controller(*model, *model, *systemInteractor, *sender, *receiver);
+            auto controller = new ControllerType{ *model,
+                                              *model, 
+                                              *systemInteractor, 
+                                              *sender, 
+                                              *receiver };
             auto inputPropagator = new Icyus::Input::InputPropagator(*controller);
             auto view = new Icyus::View::QtView(qtViewWidgetParent);
 
@@ -28,7 +37,7 @@ namespace Icyus
             model->registerObserver(controller);
             controller->registerView(view);
 
-            auto internals = Icyus::Internals(controller);
+            Icyus::Internals<ControllerType> internals( controller );
 
             //internals.setController(controller);
             //internals.addInputPropagator(inputPropagator);

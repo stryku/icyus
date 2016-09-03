@@ -1,6 +1,6 @@
 #pragma once
 
-#include <string>
+#include <experimental/filesystem>
 
 namespace Icyus
 {
@@ -12,7 +12,7 @@ namespace Icyus
             {
                 struct Header
                 {
-                    using FileNameType = std::string;
+                    using FileNameType = std::experimental::filesystem::path;
                     using FileSizeType = uintmax_t;
 
                     Header() = default;

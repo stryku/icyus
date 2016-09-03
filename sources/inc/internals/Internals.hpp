@@ -9,10 +9,11 @@
 
 namespace Icyus
 {
+    template <typename ControllerType>
     class Internals
     {
     public:
-        Internals(Icyus::Controller::Controller *controller) :
+        Internals(ControllerType *controller) :
             controller{ controller }
         {}
 
@@ -29,6 +30,6 @@ namespace Icyus
 
     private:
         //std::vector <Icyus::Input::InputPropagator*> inputs;
-        Icyus::Controller::Controller *controller;
+        ControllerType *controller;
     };
 }
