@@ -86,6 +86,7 @@ set (IcyusInternals_src ${internals_dir}/view/QtView.cpp
                         ${internals_dir}/input/InputPropagator.cpp
                         ${internals_dir}/model/Model.cpp
                         ${internals_dir}/system/QtSystemInteractor.cpp
+                        ${internals_dir}/system/FileWrapper.cpp
                         ${internals_dir}/utils/utils.cpp)
  
 set (IcyusInternals_inc ${internals_inc_dir}/Internals.hpp
