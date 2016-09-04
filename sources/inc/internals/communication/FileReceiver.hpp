@@ -34,7 +34,7 @@ namespace Icyus
                 constexpr auto ok{ "ok" };
                 auto alreadyReceivedBytes{ 0ull };
                 auto currentlyReceived{ 0ull };
-                Socket::MsgType msg;
+                Socket::MessageType msg;
 
                 auto header = receiveHeader();
                 LOG("received file header: " << header.fileName << ", " << header.fileSize);
@@ -86,7 +86,7 @@ namespace Icyus
             {
                 using Parser = detail::TransferHeader::Parser<detail::TransferHeader::Formats::Xml>;
 
-                Socket::MsgType msg;
+                Socket::MessageType msg;
 
                 socket.recv(msg);
                 socket.sendDummy();
