@@ -110,17 +110,18 @@ namespace Icyus
                 updateProgress(100);
             }
 
-            void sendAsync(const std::string &path)
+            void sendAsync(File &file)
             {
                 if (asyncThread.joinable())
                     asyncThread.join();
 
-                asyncThread = std::thread{ [this, path] { send(path); } };
-            }
+                auto threadMethod = [this](File &&file)
+                {
+                    File f{ std::move(file) };
+                    send(f);
+                };
 
-            std::enable_if_t<Icyus::utils::isTestClass<Socket>, Socket&> getSocket()
-            {
-                return socket;
+                asyncThread = std::thread{ threadMethod, std::move(file) };
             }
 
         private:

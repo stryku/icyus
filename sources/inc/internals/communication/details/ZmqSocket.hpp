@@ -13,7 +13,7 @@ namespace Icyus
             class ZmqSocket
             {
             public:
-                using MsgType = zmq::message_t;
+                using MessageType = zmq::message_t;
 
                 ZmqSocket(zmq::context_t &ctx,
                           zmq::socket_type socketType) :

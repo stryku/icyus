@@ -86,6 +86,7 @@ set (IcyusInternals_src ${internals_dir}/view/QtView.cpp
                         ${internals_dir}/input/InputPropagator.cpp
                         ${internals_dir}/model/Model.cpp
                         ${internals_dir}/system/QtSystemInteractor.cpp
+                        ${internals_dir}/system/FileWrapper.cpp
                         ${internals_dir}/utils/utils.cpp)
  
 set (IcyusInternals_inc ${internals_inc_dir}/Internals.hpp
@@ -103,6 +104,7 @@ set (IcyusInternals_inc ${internals_inc_dir}/Internals.hpp
                         ${internals_inc_dir}/controller/Controller.hpp
                         ${internals_inc_dir}/system/ISystemInteractor.hpp
                         ${internals_inc_dir}/system/QtSystemInteractor.hpp
+                        ${internals_inc_dir}/system/FileWrapper.hpp
                         ${internals_inc_dir}/communication/FileSender.hpp
                         ${internals_inc_dir}/communication/FileReceiver.hpp
                         ${internals_inc_dir}/communication/details/TransferHeaderParser.hpp

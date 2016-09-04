@@ -19,7 +19,7 @@ namespace Icyus
 {
     namespace Controller
     {
-        template <typename FileSender, typename FileReceiver>
+        template <typename FileSender, typename FileReceiver, typename File>
         class Controller final : public Icyus::Input::IInputHandler,
                                  public Icyus::Model::IModelObserver
         {
@@ -80,8 +80,9 @@ namespace Icyus
             void send() override
             {
                 auto path = model.getSenderFilePath();
+                File file{ path };
 
-                auto fileSize = std::experimental::filesystem::file_size(path);
+                auto fileSize = file.size();
 
                 LOG("Sending started. \nFile: " << path << " \nsize: " << fileSize);
                 for (auto view : views)
@@ -98,7 +99,7 @@ namespace Icyus
                 });
 
                 myforeachptr(views, setSenderProgressValue, 0);
-                sender.sendAsync(path);
+                sender.sendAsync(file);
             }
             void connect() override
             {
